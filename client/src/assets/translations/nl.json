@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "Home",
+    "investments": "Investeringen",
+    "dashboard": "Dashboard",
+    "admin": "Beheerder",
+    "about": "Over Ons",
+    "contact": "Contact",
+    "services": "Diensten",
+    "faq": "Veelgestelde Vragen",
+    "legal": "Juridisch",
+    "ticker": {
+      "welcome": "Welkom bij WealthyBridge Investment!",
+      "returns": "Veilige en Betrouwbare Investeringsrendementen",
+      "roi": "Tot 45% ROI op Premium Plannen",
+      "refer": "Verwijs vrienden en verdien commissies"
+    }
+  },
+  "signup": {
+    "title": "Aanmelden",
+    "email": "E-mail",
+    "phone": "Telefoonnummer",
+    "countryCode": "Landcode",
+    "password": "Wachtwoord",
+    "referralCode": "Verwijzingscode (Optioneel)",
+    "submit": "Aanmelden",
+    "haveAccount": "Heb je al een account?",
+    "signin": "Inloggen",
+    "passwordError": "Het wachtwoord moet minimaal 8 tekens bevatten, met hoofdletters, kleine letters, cijfers en speciale tekens",
+    "error": "Registratie mislukt. Probeer het opnieuw."
+  },
+  "signin": {
+    "title": "Inloggen",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "twoFactorCode": "Twee-Factor Code",
+    "submit": "Inloggen",
+    "noAccount": "Heb je geen account?",
+    "signup": "Aanmelden",
+    "forgotPassword": "Wachtwoord vergeten?",
+    "error": "Inloggen mislukt. Controleer je gegevens."
+  },
+  "signout": {
+    "title": "Uitloggen"
+  },
+  "otp": {
+    "emailTitle": "E-mail Verifiëren",
+    "phoneTitle": "Telefoon Verifiëren",
+    "instructions": "Voer de OTP-code in die is verzonden naar {identifier}",
+    "code": "OTP-code",
+    "submit": "Verifiëren",
+    "error": "Verificatie mislukt. Probeer het opnieuw."
+  },
+  "admin": {
+    "title": "Beheerdersdashboard",
+    "loading": "Gegevens worden geladen...",
+    "error": "Gegevens laden mislukt. Probeer het opnieuw.",
+    "investments": "Investeringen",
+    "noInvestments": "Geen investeringen gevonden.",
+    "investmentId": "Investerings-ID",
+    "user": "Gebruiker",
+    "amount": "Bedrag",
+    "status": "Status",
+    "referrals": "Verwijzingen",
+    "noReferrals": "Geen verwijzingen gevonden.",
+    "referralId": "Verwijzings-ID",
+    "referrer": "Verwijzer",
+    "referred": "Verwezen Gebruiker",
+    "comments": "Opmerkingen",
+    "noComments": "Geen opmerkingen gevonden.",
+    "commentId": "Opmerkingen-ID",
+    "content": "Inhoud"
+  },
+  "home": {
+    "title": "Welkom bij WealthyBridge",
+    "description": "Sluit je aan bij ons platform voor veilige en betrouwbare investeringsmogelijkheden."
+  },
+  "nopage": {
+    "title": "Pagina Niet Gevonden",
+    "message": "Sorry, de pagina die je zoekt bestaat niet."
+  },
+  "footer": {
+    "about": "WealthyBridge is uw vertrouwde partner voor veilige en betrouwbare investeringsmogelijkheden.",
+    "links": "Snelle Links",
+    "contact": "Neem Contact Op",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "rights": "Alle rechten voorbehouden."
+  }
+}

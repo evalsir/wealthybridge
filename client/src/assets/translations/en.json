@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "home": "Home",
+    "investments": "Investments",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "about": "About",
+    "contact": "Contact",
+    "services": "Services",
+    "faq": "FAQ",
+    "legal": "Legal",
+    "ticker": {
+      "welcome": "Welcome to WealthyBridge Investment!",
+      "returns": "Secure & Reliable Investment Returns",
+      "roi": "Up to 45% ROI on Premium Plans",
+      "refer": "Refer friends and earn commissions"
+    }
+  },
+  "signup": {
+    "title": "Sign Up",
+    "email": "Email",
+    "phone": "Phone Number",
+    "countryCode": "Country Code",
+    "password": "Password",
+    "referralCode": "Referral Code (Optional)",
+    "submit": "Sign Up",
+    "haveAccount": "Already have an account?",
+    "signin": "Sign In",
+    "passwordError": "Password must be at least 8 characters with uppercase, lowercase, number, and special character",
+    "error": "Registration failed. Please try again."
+  },
+  "signin": {
+    "title": "Sign In",
+    "email": "Email",
+    "password": "Password",
+    "twoFactorCode": "2FA Code",
+    "submit": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signup": "Sign Up",
+    "forgotPassword": "Forgot Password?",
+    "error": "An error occurred during login. Please try again.",
+    "invalid_credentials": "Invalid email or password. Please try again.",
+    "invalid_2fa_code": "Invalid or expired 2FA code. Please try again.",
+    "verification_required": "Please complete the payment verification to continue.",
+    "unknown_step": "Unknown verification step. Please contact support."
+  },
+  "signout": {
+    "title": "Sign Out"
+  },
+  "otp": {
+    "emailTitle": "Email Address Verification",
+    "phoneTitle": "Phone Number Verification",
+    "instructionsemail": "We've sent a One-Time Password (OTP) to your email address. Please enter it below to continue.",
+    "instructionsphone": "A One-Time Password (OTP) has been sent to your phone. Enter it below to verify your number.",
+    "instructions": "To complete verification, please enter the One-Time Password (OTP) sent to you.",
+    "code": "Enter your OTP",
+    "submit": "Verify Now",
+    "error": "Verification unsuccessful. Please check the OTP and try again."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "loading": "Loading data...",
+    "error": "Failed to load data. Please try again.",
+    "investments": "Investments",
+    "noInvestments": "No investments found.",
+    "investmentId": "Investment ID",
+    "user": "User",
+    "amount": "Amount",
+    "status": "Status",
+    "referrals": "Referrals",
+    "noReferrals": "No referrals found.",
+    "referralId": "Referral ID",
+    "referrer": "Referrer",
+    "referred": "Referred User",
+    "comments": "Comments",
+    "noComments": "No comments found.",
+    "commentId": "Comment ID",
+    "content": "Content"
+  },
+  "home": {
+    "title": "Welcome to WealthyBridge",
+    "description": "Join our platform for secure and reliable investment opportunities."
+  },
+  "nopage": {
+    "title": "Page Not Found",
+    "message": "Sorry, the page you are looking for does not exist."
+  },
+  "footer": {
+    "about": "WealthyBridge is your trusted partner for secure and reliable investment opportunities.",
+    "links": "Quick Links",
+    "contact": "Contact Us",
+    "email": "Email",
+    "phone": "Phone",
+    "rights": "All rights reserved."
+  }
+}

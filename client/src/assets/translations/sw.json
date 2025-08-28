@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "Nyumbani",
+    "investments": "Uwekezaji",
+    "dashboard": "Dashibodi",
+    "admin": "Admin",
+    "about": "Kuhusu",
+    "contact": "Wasiliana",
+    "services": "Huduma",
+    "faq": "Maswali Yanayoulizwa Mara kwa Mara",
+    "legal": "Sheria",
+    "ticker": {
+      "welcome": "Karibu WealthyBridge Investment!",
+      "returns": "Faida za Uwekezaji Salama na za Kuaminika",
+      "roi": "Hadi 45% ROI kwenye Mipango ya Premium",
+      "refer": "Waalike marafiki na upate tume"
+    }
+  },
+  "signup": {
+    "title": "Jisajili",
+    "email": "Barua Pepe",
+    "phone": "Nambari ya Simu",
+    "countryCode": "Msimbo wa Nchi",
+    "password": "Nenosiri",
+    "referralCode": "Msimbo wa Rufaa (Hiari)",
+    "submit": "Jisajili",
+    "haveAccount": "Je, tayari una akaunti?",
+    "signin": "Ingia",
+    "passwordError": "Nenosiri lazima liwe na angalau herufi 8, herufi kubwa, ndogo, nambari, na alama maalum",
+    "error": "Usajili umeshindwa. Jaribu tena."
+  },
+  "signin": {
+    "title": "Ingia",
+    "email": "Barua Pepe",
+    "password": "Nenosiri",
+    "twoFactorCode": "Msimbo wa 2FA",
+    "submit": "Ingia",
+    "noAccount": "Huna akaunti?",
+    "signup": "Jisajili",
+    "forgotPassword": "Umesahau Nenosiri?",
+    "error": "Kuingia kumeshindwa. Tafadhali angalia maelezo yako."
+  },
+  "signout": {
+    "title": "Toka"
+  },
+  "otp": {
+    "emailTitle": "Thibitisha Barua Pepe",
+    "phoneTitle": "Thibitisha Simu",
+    "instructions": "Ingiza OTP iliyotumwa kwa {identifier}",
+    "code": "Msimbo wa OTP",
+    "submit": "Thibitisha",
+    "error": "Uthibitishaji umeshindwa. Jaribu tena."
+  },
+  "admin": {
+    "title": "Dashibodi ya Admin",
+    "loading": "Inapakia data...",
+    "error": "Imeshindwa kupakia data. Jaribu tena.",
+    "investments": "Uwekezaji",
+    "noInvestments": "Hakuna uwekezaji uliopatikana.",
+    "investmentId": "ID ya Uwekezaji",
+    "user": "Mtumiaji",
+    "amount": "Kiasi",
+    "status": "Hali",
+    "referrals": "Rufaa",
+    "noReferrals": "Hakuna rufaa zilizopatikana.",
+    "referralId": "ID ya Rufaa",
+    "referrer": "Mrejesheaji",
+    "referred": "Mtumiaji Aliyerejeshwa",
+    "comments": "Maoni",
+    "noComments": "Hakuna maoni yaliyopatikana.",
+    "commentId": "ID ya Maoni",
+    "content": "Maudhui"
+  },
+  "home": {
+    "title": "Karibu WealthyBridge",
+    "description": "Jiunge na jukwaa letu kwa fursa za uwekezaji salama na za kuaminika."
+  },
+  "nopage": {
+    "title": "Ukurasa Haukupatikana",
+    "message": "Samahani, ukurasa unayotafuta haupo."
+  },
+  "footer": {
+    "about": "WealthyBridge ni mshirika wako wa kuaminika kwa fursa za uwekezaji salama na za kuaminika.",
+    "links": "Viungo vya Haraka",
+    "contact": "Wasiliana Nasi",
+    "email": "Barua Pepe",
+    "phone": "Simu",
+    "rights": "Haki zote zimehifadhiwa."
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "investments": "投資",
+    "dashboard": "ダッシュボード",
+    "admin": "管理者",
+    "about": "私たちについて",
+    "contact": "お問い合わせ",
+    "services": "サービス",
+    "faq": "よくある質問",
+    "legal": "法的情報",
+    "ticker": {
+      "welcome": "WealthyBridge投資へようこそ！",
+      "returns": "安全で信頼性の高い投資リターン",
+      "roi": "プレミアムプランで最大45%のROI",
+      "refer": "友達を紹介してコミッションを獲得"
+    }
+  },
+  "signup": {
+    "title": "登録",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "countryCode": "国コード",
+    "password": "パスワード",
+    "referralCode": "紹介コード（任意）",
+    "submit": "登録",
+    "haveAccount": "すでにアカウントをお持ちですか？",
+    "signin": "ログイン",
+    "passwordError": "パスワードは8文字以上で、大文字、小文字、数字、特殊文字を含む必要があります",
+    "error": "登録に失敗しました。もう一度お試しください。"
+  },
+  "signin": {
+    "title": "ログイン",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "twoFactorCode": "2要素認証コード",
+    "submit": "ログイン",
+    "noAccount": "アカウントをお持ちではありませんか？",
+    "signup": "登録",
+    "forgotPassword": "パスワードを忘れましたか？",
+    "error": "ログインに失敗しました。資格情報を確認してください。"
+  },
+  "signout": {
+    "title": "ログアウト"
+  },
+  "otp": {
+    "emailTitle": "メールの確認",
+    "phoneTitle": "電話の確認",
+    "instructions": "{identifier} に送信されたOTPコードを入力してください",
+    "code": "OTPコード",
+    "submit": "確認",
+    "error": "認証に失敗しました。もう一度お試しください。"
+  },
+  "admin": {
+    "title": "管理者ダッシュボード",
+    "loading": "データをロード中...",
+    "error": "データのロードに失敗しました。もう一度お試しください。",
+    "investments": "投資",
+    "noInvestments": "投資が見つかりませんでした。",
+    "investmentId": "投資ID",
+    "user": "ユーザー",
+    "amount": "金額",
+    "status": "ステータス",
+    "referrals": "紹介",
+    "noReferrals": "紹介が見つかりませんでした。",
+    "referralId": "紹介ID",
+    "referrer": "紹介者",
+    "referred": "紹介されたユーザー",
+    "comments": "コメント",
+    "noComments": "コメントが見つかりませんでした。",
+    "commentId": "コメントID",
+    "content": "内容"
+  },
+  "home": {
+    "title": "WealthyBridge へようこそ",
+    "description": "安全で信頼性の高い投資機会のために私たちのプラットフォームに参加してください。"
+  },
+  "nopage": {
+    "title": "ページが見つかりません",
+    "message": "申し訳ありませんが、お探しのページは存在しません。"
+  },
+  "footer": {
+    "about": "WealthyBridge は、投資機会のための信頼できるパートナーです。",
+    "links": "クイックリンク",
+    "contact": "お問い合わせ",
+    "email": "メール",
+    "phone": "電話",
+    "rights": "すべての権利を保有します。"
+  }
+}

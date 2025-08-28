@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "Strona Główna",
+    "investments": "Inwestycje",
+    "dashboard": "Panel Kontrolny",
+    "admin": "Administrator",
+    "about": "O Nas",
+    "contact": "Kontakt",
+    "services": "Usługi",
+    "faq": "Często Zadawane Pytania",
+    "legal": "Prawne",
+    "ticker": {
+      "welcome": "Witamy w WealthyBridge Investment!",
+      "returns": "Bezpieczne i Niezawodne Zwroty z Inwestycji",
+      "roi": "Do 45% ROI w Planach Premium",
+      "refer": "Poleć znajomych i zarabiaj prowizje"
+    }
+  },
+  "signup": {
+    "title": "Zarejestruj się",
+    "email": "E-mail",
+    "phone": "Numer Telefonu",
+    "countryCode": "Kod Kraju",
+    "password": "Hasło",
+    "referralCode": "Kod Polecający (Opcjonalny)",
+    "submit": "Zarejestruj się",
+    "haveAccount": "Masz już konto?",
+    "signin": "Zaloguj się",
+    "passwordError": "Hasło musi mieć co najmniej 8 znaków, w tym wielkie i małe litery, cyfry oraz znaki specjalne",
+    "error": "Rejestracja nie powiodła się. Spróbuj ponownie."
+  },
+  "signin": {
+    "title": "Zaloguj się",
+    "email": "E-mail",
+    "password": "Hasło",
+    "twoFactorCode": "Kod Dwuskładnikowy",
+    "submit": "Zaloguj się",
+    "noAccount": "Nie masz konta?",
+    "signup": "Zarejestruj się",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "error": "Logowanie nie powiodło się. Sprawdź swoje dane."
+  },
+  "signout": {
+    "title": "Wyloguj się"
+  },
+  "otp": {
+    "emailTitle": "Zweryfikuj E-mail",
+    "phoneTitle": "Zweryfikuj Telefon",
+    "instructions": "Wprowadź kod OTP wysłany na {identifier}",
+    "code": "Kod OTP",
+    "submit": "Zweryfikuj",
+    "error": "Weryfikacja nie powiodła się. Spróbuj ponownie."
+  },
+  "admin": {
+    "title": "Panel Administracyjny",
+    "loading": "Ładowanie danych...",
+    "error": "Nie udało się załadować danych. Spróbuj ponownie.",
+    "investments": "Inwestycje",
+    "noInvestments": "Nie znaleziono inwestycji.",
+    "investmentId": "ID Inwestycji",
+    "user": "Użytkownik",
+    "amount": "Kwota",
+    "status": "Status",
+    "referrals": "Polecenia",
+    "noReferrals": "Nie znaleziono poleceń.",
+    "referralId": "ID Polecenia",
+    "referrer": "Polecający",
+    "referred": "Polecony Użytkownik",
+    "comments": "Komentarze",
+    "noComments": "Nie znaleziono komentarzy.",
+    "commentId": "ID Komentarza",
+    "content": "Treść"
+  },
+  "home": {
+    "title": "Witamy w WealthyBridge",
+    "description": "Dołącz do naszej platformy dla bezpiecznych i niezawodnych możliwości inwestycyjnych."
+  },
+  "nopage": {
+    "title": "Strona Nie Znaleziona",
+    "message": "Przepraszamy, strona, której szukasz, nie istnieje."
+  },
+  "footer": {
+    "about": "WealthyBridge to Twój zaufany partner w możliwościach inwestycyjnych.",
+    "links": "Szybkie Linki",
+    "contact": "Skontaktuj się z Nami",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "rights": "Wszystkie prawa zastrzeżone."
+  }
+}

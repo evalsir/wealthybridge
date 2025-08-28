@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "investments": "Investissements",
+    "dashboard": "Tableau de Bord",
+    "admin": "Administrateur",
+    "about": "À Propos",
+    "contact": "Contact",
+    "services": "Services",
+    "faq": "FAQ",
+    "legal": "Légal",
+    "ticker": {
+      "welcome": "Bienvenue chez WealthyBridge Investment !",
+      "returns": "Rendements d'Investissement Sûrs et Fiables",
+      "roi": "Jusqu'à 45% de ROI sur les Plans Premium",
+      "refer": "Parrainez des amis et gagnez des commissions"
+    }
+  },
+  "signup": {
+    "title": "S'inscrire",
+    "email": "E-mail",
+    "phone": "Numéro de Téléphone",
+    "countryCode": "Code du Pays",
+    "password": "Mot de Passe",
+    "referralCode": "Code de Parrainage (Facultatif)",
+    "submit": "S'inscrire",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "signin": "Se Connecter",
+    "passwordError": "Le mot de passe doit contenir au moins 8 caractères, incluant des majuscules, des minuscules, des chiffres et des caractères spéciaux",
+    "error": "L'inscription a échoué. Veuillez réessayer."
+  },
+  "signin": {
+    "title": "Se Connecter",
+    "email": "E-mail",
+    "password": "Mot de Passe",
+    "twoFactorCode": "Code de Double Authentification",
+    "submit": "Se Connecter",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "signup": "S'inscrire",
+    "forgotPassword": "Mot de passe oublié ?",
+    "error": "La connexion a échoué. Veuillez vérifier vos identifiants."
+  },
+  "signout": {
+    "title": "Se Déconnecter"
+  },
+  "otp": {
+    "emailTitle": "Vérifier l'E-mail",
+    "phoneTitle": "Vérifier le Téléphone",
+    "instructions": "Entrez le code OTP envoyé à {identifier}",
+    "code": "Code OTP",
+    "submit": "Vérifier",
+    "error": "La vérification a échoué. Veuillez réessayer."
+  },
+  "admin": {
+    "title": "Tableau de Bord Administrateur",
+    "loading": "Chargement des données...",
+    "error": "Échec du chargement des données. Veuillez réessayer.",
+    "investments": "Investissements",
+    "noInvestments": "Aucun investissement trouvé.",
+    "investmentId": "ID d'Investissement",
+    "user": "Utilisateur",
+    "amount": "Montant",
+    "status": "Statut",
+    "referrals": "Parrainages",
+    "noReferrals": "Aucun parrainage trouvé.",
+    "referralId": "ID de Parrainage",
+    "referrer": "Parrain",
+    "referred": "Utilisateur Parrainé",
+    "comments": "Commentaires",
+    "noComments": "Aucun commentaire trouvé.",
+    "commentId": "ID de Commentaire",
+    "content": "Contenu"
+  },
+  "home": {
+    "title": "Bienvenue à WealthyBridge",
+    "description": "Rejoignez notre plateforme pour des opportunités d'investissement sûres et fiables."
+  },
+  "nopage": {
+    "title": "Page Non Trouvée",
+    "message": "Désolé, la page que vous cherchez n'existe pas."
+  },
+  "footer": {
+    "about": "WealthyBridge est votre partenaire de confiance pour les opportunités d'investissement sûres et fiables.",
+    "links": "Liens Rapides",
+    "contact": "Contactez-nous",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "rights": "Tous droits réservés."
+  }
+}

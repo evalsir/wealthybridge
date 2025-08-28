@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "首页",
+    "investments": "投资",
+    "dashboard": "仪表板",
+    "admin": "管理员",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "services": "服务",
+    "faq": "常见问题",
+    "legal": "法律",
+    "ticker": {
+      "welcome": "欢迎体验 WealthyBridge 投资！",
+      "returns": "安全可靠的投资回报",
+      "roi": "高级计划高达 45% 的投资回报率",
+      "refer": "邀请朋友并赚取佣金"
+    }
+  },
+  "signup": {
+    "title": "注册",
+    "email": "电子邮件",
+    "phone": "电话号码",
+    "countryCode": "国家代码",
+    "password": "密码",
+    "referralCode": "推荐代码（可选）",
+    "submit": "注册",
+    "haveAccount": "已有账户？",
+    "signin": "登录",
+    "passwordError": "密码必须至少包含 8 个字符，包括大写字母、小写字母、数字和特殊字符",
+    "error": "注册失败。请重试。"
+  },
+  "signin": {
+    "title": "登录",
+    "email": "电子邮件",
+    "password": "密码",
+    "twoFactorCode": "双重认证代码",
+    "submit": "登录",
+    "noAccount": "没有账户？",
+    "signup": "注册",
+    "forgotPassword": "忘记密码？",
+    "error": "登录失败。请检查您的凭据。"
+  },
+  "signout": {
+    "title": "退出"
+  },
+  "otp": {
+    "emailTitle": "验证电子邮件",
+    "phoneTitle": "验证电话",
+    "instructions": "请输入发送至 {identifier} 的 OTP 代码",
+    "code": "OTP 代码",
+    "submit": "验证",
+    "error": "验证失败。请重试。"
+  },
+  "admin": {
+    "title": "管理员仪表板",
+    "loading": "正在加载数据...",
+    "error": "加载数据失败。请重试。",
+    "investments": "投资",
+    "noInvestments": "未找到投资。",
+    "investmentId": "投资 ID",
+    "user": "用户",
+    "amount": "金额",
+    "status": "状态",
+    "referrals": "推荐",
+    "noReferrals": "未找到推荐。",
+    "referralId": "推荐 ID",
+    "referrer": "推荐人",
+    "referred": "被推荐用户",
+    "comments": "评论",
+    "noComments": "未找到评论。",
+    "commentId": "评论 ID",
+    "content": "内容"
+  },
+  "home": {
+    "title": "欢迎体验 WealthyBridge",
+    "description": "加入我们的平台，获取安全可靠的投资机会。"
+  },
+  "nopage": {
+    "title": "页面未找到",
+    "message": "抱歉，您寻找的页面不存在。"
+  },
+  "footer": {
+    "about": "WealthyBridge 是您值得信赖的投资机会合作伙伴。",
+    "links": "快速链接",
+    "contact": "联系我们",
+    "email": "电子邮件",
+    "phone": "电话",
+    "rights": "保留所有权利。"
+  }
+}

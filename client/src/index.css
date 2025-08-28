@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* src/index.css */
+.marquee {
+  display: flex;
+  animation: marquee 25s linear infinite;
+  white-space: nowrap;
+  gap: 3rem;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Marquee effect inside 80% width */
+.ticker-container {
+  height: 24px;
+  position: relative;
+}
+
+.ticker-content {
+  display: inline-flex;
+  white-space: nowrap;
+  gap: 4rem;
+  animation: scroll-left 25s linear infinite;
+}
+
+/* Pause animation on hover */
+.ticker-content:hover {
+  animation-play-state: paused;
+}
+
+.ticker-content span {
+  display: inline-block;
+  padding-right: 2rem;
+}
+
+/* Scroll animation */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

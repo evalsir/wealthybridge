@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "investments": "Inversiones",
+    "dashboard": "Panel de Control",
+    "admin": "Administrador",
+    "about": "Sobre Nosotros",
+    "contact": "Contacto",
+    "services": "Servicios",
+    "faq": "Preguntas Frecuentes",
+    "legal": "Legal",
+    "ticker": {
+      "welcome": "¡Bienvenido a WealthyBridge Investment!",
+      "returns": "Retornos de Inversión Seguros y Confiables",
+      "roi": "Hasta un 45% de ROI en Planes Premium",
+      "refer": "Refiere amigos y gana comisiones"
+    }
+  },
+  "signup": {
+    "title": "Registrarse",
+    "email": "Correo Electrónico",
+    "phone": "Número de Teléfono",
+    "countryCode": "Código de País",
+    "password": "Contraseña",
+    "referralCode": "Código de Referencia (Opcional)",
+    "submit": "Registrarse",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "signin": "Iniciar Sesión",
+    "passwordError": "La contraseña debe tener al menos 8 caracteres, con mayúsculas, minúsculas, números y caracteres especiales",
+    "error": "El registro falló. Por favor, intenta de nuevo."
+  },
+  "signin": {
+    "title": "Iniciar Sesión",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "twoFactorCode": "Código de Doble Factor",
+    "submit": "Iniciar Sesión",
+    "noAccount": "¿No tienes una cuenta?",
+    "signup": "Registrarse",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "error": "El inicio de sesión falló. Por favor, verifica tus credenciales."
+  },
+  "signout": {
+    "title": "Cerrar Sesión"
+  },
+  "otp": {
+    "emailTitle": "Verificar Correo Electrónico",
+    "phoneTitle": "Verificar Teléfono",
+    "instructions": "Ingresa el código OTP enviado a {identifier}",
+    "code": "Código OTP",
+    "submit": "Verificar",
+    "error": "La verificación falló. Por favor, intenta de nuevo."
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "loading": "Cargando datos...",
+    "error": "No se pudieron cargar los datos. Por favor, intenta de nuevo.",
+    "investments": "Inversiones",
+    "noInvestments": "No se encontraron inversiones.",
+    "investmentId": "ID de Inversión",
+    "user": "Usuario",
+    "amount": "Monto",
+    "status": "Estado",
+    "referrals": "Referencias",
+    "noReferrals": "No se encontraron referencias.",
+    "referralId": "ID de Referencia",
+    "referrer": "Referidor",
+    "referred": "Usuario Referido",
+    "comments": "Comentarios",
+    "noComments": "No se encontraron comentarios.",
+    "commentId": "ID de Comentario",
+    "content": "Contenido"
+  },
+  "home": {
+    "title": "Bienvenido a WealthyBridge",
+    "description": "Únete a nuestra plataforma para oportunidades de inversión seguras y confiables."
+  },
+  "nopage": {
+    "title": "Página No Encontrada",
+    "message": "Lo sentimos, la página que buscas no existe."
+  },
+  "footer": {
+    "about": "WealthyBridge es tu socio confiable para oportunidades de inversión seguras y confiables.",
+    "links": "Enlaces Rápidos",
+    "contact": "Contáctanos",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "rights": "Todos los derechos reservados."
+  }
+}
