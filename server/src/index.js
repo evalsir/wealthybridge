@@ -1,3 +1,4 @@
+// server/src/index.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -17,36 +18,38 @@ delete require.cache[require.resolve('./controllers/userController')];
 
 const app = express();
 
-//  Allowed origins for CORS (specific URLs, not '*')
+// Allowed origins for CORS
 const allowedOrigins = [
-  process.env.CLIENT_URL,              // from .env (frontend ngrok)
-  'http://localhost:3000',            // for local dev
+  process.env.CLIENT_URL || 'https://ef8873279cee.ngrok-free.app', // Prioritize .env
+  'http://localhost:3000', // Local dev
+  'http://localhost:5173', // Vite default port
 ];
 
 // Use Helmet for security
 app.use(helmet());
 
-//  REMOVE this line:
-// app.use(cors({ origin: '*' }));
-
-//  Correct CORS configuration for cookies and Authorization header
+// CORS configuration
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      logger.warn(`CORS blocked for origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true //  allows cookies and auth headers
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Preflight for all routes
-app.options('*', cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+// Fix: Add request logging middleware
+app.use((req, res, next) => {
+  logger.info(`Incoming ${req.method} ${req.url} from ${req.get('Origin') || 'unknown'}`);
+  next();
+});
 
+// Parse JSON and URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

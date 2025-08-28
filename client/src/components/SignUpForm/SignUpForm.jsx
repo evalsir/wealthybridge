@@ -1,7 +1,7 @@
 
+// src/components/SignUpForm/SignUpForm.jsx
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   SignupPage,
@@ -63,7 +63,7 @@ const SignUpForm = () => {
   const paymentMethods = [
     { value: "paypal", label: "PayPal", redirect: true },
     { value: "stripe", label: "Stripe", redirect: false },
-    { value: "mpesa", label: "M-Pesa", redirect: false }, // M-Pesa does not redirect
+    { value: "mpesa", label: "M-Pesa", redirect: false },
     { value: "airtelmoney", label: "Airtel Money", redirect: false },
     { value: "mtn", label: "MTN", redirect: false },
     { value: "tigopesa", label: "Tigo Pesa", redirect: false },
@@ -156,19 +156,20 @@ const SignUpForm = () => {
         countryCode: formData.countryCode,
       });
       console.log("Check user response:", res.data);
+      // Fix: Handle specific response messages and status codes
       if (res.status === 200) {
-        localStorage.setItem("token", res.data.token); // Store token
+        if (res.data.token) {
+          localStorage.setItem("token", res.data.token); // Store token
+        }
         setUserId(res.data.userId);
-        setSuccess(
-          t(
-            "You are already registered and your account is active. Please proceed to pay the activation fee to complete registration."
-          )
-        );
         if (res.data.message === "email_otp_resent") {
+          setSuccess(t("otp.email_otp_resent"));
           setStep("emailOTP");
         } else if (res.data.message === "phone_otp_resent") {
+          setSuccess(t("otp.phone_otp_resent"));
           setStep("phoneOTP");
         } else if (res.data.message === "payment_required") {
+          setSuccess(t("You are already registered and your account is active. Please proceed to pay the activation fee to complete registration."));
           setStep("payment");
         } else if (res.data.message === "user_verified") {
           setSuccess(t("user_already_verified"));
@@ -180,15 +181,16 @@ const SignUpForm = () => {
         console.log("User not found, proceeding to signup");
         await handleSubmit(e);
       } else {
-        setError(t("unexpected_response"));
+        setError(t(res.data.message || "unexpected_response"));
       }
     } catch (error) {
-      console.error("Check user error:", error.response?.data || error.message);
-      const errorMessage = error.response?.data?.message || "check_user_failed";
-      setError(t(errorMessage));
-      if (error.response?.status === 404) {
+      console.error("Check user error:", error);
+      // Fix: Handle error.status explicitly
+      if (error.status === 404) {
         console.log("User not found, proceeding to signup");
         await handleSubmit(e);
+      } else {
+        setError(t(error.message || "check_user_failed"));
       }
     } finally {
       setIsSubmitting(false);
@@ -206,15 +208,12 @@ const SignUpForm = () => {
     try {
       const res = await SignupPage({ ...formData });
       console.log("Signup response:", res.data);
-      if (res.status === 201) {
-        localStorage.setItem("token", res.data.token); // Store token
+      if (res.status === 201 || res.status === 200) {
+        if (res.data.token) {
+          localStorage.setItem("token", res.data.token); // Store token
+        }
         setSuccess(t("user_registered"));
         setUserId(res.data.userId);
-        setStep("emailOTP");
-      } else if (res.status === 200) {
-        localStorage.setItem("token", res.data.token); // Store token
-        setUserId(res.data.userId);
-        setSuccess(t("user_registered"));
         if (res.data.message === "email_otp_resent") {
           setStep("emailOTP");
         } else if (res.data.message === "phone_otp_resent") {
@@ -231,11 +230,8 @@ const SignUpForm = () => {
         setError(t(res.data.message || "unexpected_response"));
       }
     } catch (error) {
-      console.error("Signup error:", error.response?.data || error.message);
-      const errorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        "signup_failed";
+      console.error("Signup error:", error);
+      const errorMessage = error.message || error.error || "signup_failed";
       if (errorMessage === "user_exists") {
         setSuccess(t("user_registered"));
         try {
@@ -245,7 +241,9 @@ const SignUpForm = () => {
             countryCode: formData.countryCode,
           });
           console.log("Check user status after user_exists:", statusRes.data);
-          localStorage.setItem("token", statusRes.data.token); // Store token
+          if (statusRes.data.token) {
+            localStorage.setItem("token", statusRes.data.token); // Store token
+          }
           setUserId(statusRes.data.userId);
           if (statusRes.status === 200) {
             if (statusRes.data.message === "email_otp_resent") {
@@ -254,7 +252,7 @@ const SignUpForm = () => {
               setStep("phoneOTP");
             } else if (statusRes.data.message === "payment_required") {
               setStep("payment");
-            } else if (res.data.message === "user_verified") {
+            } else if (statusRes.data.message === "user_verified") {
               setSuccess(t("user_already_verified"));
               navigate("/signin");
             } else {
@@ -266,7 +264,7 @@ const SignUpForm = () => {
         } catch (statusError) {
           console.error(
             "Check user status error after user_exists:",
-            statusError.response?.data || statusError.message
+            statusError
           );
           setError(t("check_user_failed"));
         }
@@ -304,9 +302,9 @@ const SignUpForm = () => {
     } catch (error) {
       console.error(
         "Email OTP verification error:",
-        error.response?.data || error.message
+        error
       );
-      if (error.response?.data?.details === "no_otp_record") {
+      if (error.details === "no_otp_record") {
         console.log(
           "No OTP record found, checking user status to confirm verification"
         );
@@ -335,12 +333,12 @@ const SignUpForm = () => {
         } catch (statusError) {
           console.error(
             "Post-OTP user status check error:",
-            statusError.response?.data || statusError.message
+            statusError
           );
           setError(t("otp.email_otp_failed") + " " + t("no_otp_record"));
         }
       } else {
-        setError(t(error.response?.data?.message || "otp.email_otp_failed"));
+        setError(t(error.message || "otp.email_otp_failed"));
       }
     } finally {
       setIsSubmitting(false);
@@ -386,9 +384,9 @@ const SignUpForm = () => {
     } catch (error) {
       console.error(
         "Phone OTP verification error:",
-        error.response?.data || error.message
+        error
       );
-      if (error.response?.data?.details === "no_otp_record") {
+      if (error.details === "no_otp_record") {
         try {
           const statusRes = await checkUserStatus({
             email: formData.email,
@@ -415,12 +413,12 @@ const SignUpForm = () => {
         } catch (statusError) {
           console.error(
             "Post-OTP user status check error:",
-            statusError.response?.data || statusError.message
+            statusError
           );
           setError(t("otp.phone_otp_failed") + " " + t("no_otp_record"));
         }
       } else {
-        setError(t(error.response?.data?.message || "otp.phone_otp_failed"));
+        setError(t(error.message || "otp.phone_otp_failed"));
       }
     } finally {
       setIsSubmitting(false);
@@ -450,9 +448,9 @@ const SignUpForm = () => {
     } catch (error) {
       console.error(
         "2FA OTP verification error:",
-        error.response?.data || error.message
+        error
       );
-      if (error.response?.data?.details === "no_otp_record") {
+      if (error.details === "no_otp_record") {
         try {
           const statusRes = await checkUserStatus({
             email: formData.email,
@@ -475,12 +473,12 @@ const SignUpForm = () => {
         } catch (statusError) {
           console.error(
             "Post-OTP user status check error:",
-            statusError.response?.data || statusError.message
+            statusError
           );
           setError(t("otp.2fa_otp_failed") + " " + t("no_otp_record"));
         }
       } else {
-        setError(t(error.response?.data?.message || "otp.2fa_otp_failed"));
+        setError(t(error.message || "otp.2fa_otp_failed"));
       }
     } finally {
       setIsSubmitting(false);
@@ -525,6 +523,40 @@ const SignUpForm = () => {
       }
     }
 
+    // Fix: Add Stripe-specific handling for CardElement
+    if (["stripe", "mastercard", "googlepay"].includes(paymentMethod)) {
+      if (!stripe || !elements) {
+        setError(t("stripe_not_loaded"));
+        setIsSubmitting(false);
+        return;
+      }
+      try {
+        const cardElement = elements.getElement(CardElement);
+        const { error: stripeError, paymentMethod: stripePaymentMethod } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: cardElement,
+          billing_details: {
+            email: formData.email,
+            name: `${formData.firstName} ${formData.secondName}`,
+            phone: paymentData.phoneNumber,
+          },
+        });
+
+        if (stripeError) {
+          setError(t(stripeError.message || "payment_verification_failed"));
+          setIsSubmitting(false);
+          return;
+        }
+
+        paymentData.stripePaymentMethodId = stripePaymentMethod.id;
+      } catch (error) {
+        console.error("Stripe payment method creation error:", error);
+        setError(t("payment_verification_failed"));
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     try {
       console.log(`Initiating payment for ${paymentMethod}:`, paymentData);
       const res = await processVerificationPayment(paymentMethod, paymentData);
@@ -556,14 +588,12 @@ const SignUpForm = () => {
     } catch (error) {
       console.error(
         `Payment error for ${paymentMethod}:`,
-        error.response?.data || error.message
+        error
       );
-      if (error.response?.data?.message === "route_not_found") {
+      if (error.message === "route_not_found") {
         setError(t("payment_method_unavailable", { method: paymentMethod }));
       } else {
-        setError(
-          t(error.response?.data?.message || "payment_verification_failed")
-        );
+        setError(t(error.message || "payment_verification_failed"));
       }
     } finally {
       setIsSubmitting(false);
@@ -609,11 +639,9 @@ const SignUpForm = () => {
     } catch (error) {
       console.error(
         "Payment callback error:",
-        error.response?.data || error.message
+        error
       );
-      setError(
-        t(error.response?.data?.message || "payment_verification_failed")
-      );
+      setError(t(error.message || "payment_verification_failed"));
       setStep("payment");
     } finally {
       setIsSubmitting(false);
@@ -988,9 +1016,9 @@ const SignUpForm = () => {
                 <NavLink to="/legal" className="text-blue-600 underline">
                   {t("Terms & Conditions")}
                 </NavLink>{" "}
-                {"and have acknowldge the"}{" "}
-                <NavLink to="" className="text-blue-600 underline">
-                  {t("Global Privacy Statement.")}
+                {"and have acknowledged the"}{" "}
+                <NavLink to="/privacy" className="text-blue-600 underline">
+                  {t("Global Privacy Statement")}
                 </NavLink>
               </label>
             </div>
@@ -1088,6 +1116,13 @@ const SignUpForm = () => {
                 >
                   {t("click to continue")}
                 </a>
+              </div>
+            )}
+
+            {/* Fix: Add warning for adblockers blocking Stripe */}
+            {["stripe", "mastercard", "googlepay"].includes(paymentMethod) && (
+              <div className="text-yellow-600 p-2 bg-yellow-100 rounded">
+                {t("disable_adblocker_for_stripe")}
               </div>
             )}
 

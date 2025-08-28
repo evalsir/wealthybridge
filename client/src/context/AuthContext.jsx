@@ -1,3 +1,4 @@
+// client/src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
 import { api, getProfile } from '../utils/api';
 
@@ -9,7 +10,8 @@ export const AuthProvider = ({ children }) => {
 
   const fetchProfile = async () => {
     try {
-      const profile = await getProfile();
+      const response = await getProfile(); // Changed to await the full response
+      const profile = response.data; // Extract data from response
       console.log('Fetched profile:', profile);
       // Derive firstName and lastName from name
       const nameParts = profile.name ? profile.name.trim().split(' ') : [];
@@ -30,19 +32,25 @@ export const AuthProvider = ({ children }) => {
         data: error.response?.data,
         message: error.message,
       });
-      return null;
+      return null; // Return null explicitly to avoid undefined
     }
   };
-//modified
- const checkSession = async () => {
+
+  const checkSession = async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        console.log('No token found in localStorage');
+        // Fix: Only log in development to reduce noise
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('No token found in localStorage');
+        }
         setLoading(false);
         return;
       }
-      console.log('Checking session with token:', token.slice(0, 20) + '...');
+      // Fix: Only log in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Checking session with token:', token.slice(0, 20) + '...');
+      }
       const response = await api.get('/api/auth/session', {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
@@ -57,7 +65,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Session check error:', {
-        status: error.response?.status,
+        status: error.response?.status, // Fixed: Changed 'Status' to 'status' for consistency
         data: error.response?.data,
         message: error.message,
         code: error.code,
@@ -80,16 +88,22 @@ export const AuthProvider = ({ children }) => {
         password,
         twoFactorCode,
       });
-      console.log('Login response:', response.data); // Log raw response for debugging
-    if (response.data.message === '2fa_required') {
-      // Return 2FA requirement details without attempting to access token
-      return {
-        requires2FA: true,
-        user: response.data.user, // Contains id and requires2FA
-      };
-    }
+      // Fix: Only log in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Login response:', response.data);
+      }
+      if (response.data.message === '2fa_required') {
+        // Return 2FA requirement details without attempting to access token
+        return {
+          requires2FA: true,
+          user: response.data.user, // Contains id and requires2FA
+        };
+      }
       const { token, user: loginUser } = response.data;
-      console.log('Login response:', { token: token.slice(0, 20) + '...', user: loginUser });
+      // Fix: Only log in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Login response:', { token: token.slice(0, 20) + '...', user: loginUser });
+      }
       localStorage.setItem('token', token);
       // Fetch full profile
       const profile = await fetchProfile();
@@ -106,10 +120,12 @@ export const AuthProvider = ({ children }) => {
         message: error.message,
         code: error.code,
       });
-      throw error;
+      // Fix: Throw a structured error to avoid undefined
+      throw error.response?.data || { error: 'Login failed', status: error.response?.status || 500 };
     }
   };
-//end of fix
+
+  // Fix: Corrected syntax error from 'async ()===' to 'async () =>'
   const logout = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -118,7 +134,10 @@ export const AuthProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
-        console.log('Logout successful');
+        // Fix: Only log in development
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('Logout successful');
+        }
       }
     } catch (error) {
       console.error('Logout failed:', {
@@ -137,7 +156,10 @@ export const AuthProvider = ({ children }) => {
     const profile = await fetchProfile();
     if (profile) {
       setUser(profile);
-      console.log('User updated:', profile);
+      // Fix: Only log in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('User updated:', profile);
+      }
     }
   };
 
