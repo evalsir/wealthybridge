@@ -1,9 +1,14 @@
+// src/services/paymentService.js
 const Payment = require('../models/Payment');
 const gateways = require('../payments');
 const currencyService = require('./currencyService');
 const ErrorHandler = require('../utils/errorHandler');
 const logger = require('../utils/logger');
 const Investment = require('../models/Investment');
+const User = require('../models/User'); // Added: For referral bonus
+const Referral = require('../models/Referral'); // Added: For referral bonus
+const emailService = require('./emailService'); // Added: For notifications
+const smsService = require('./smsService'); // Added: For notifications
 
 // Process payment with currency conversion
 exports.processPayment = async (options) => {
@@ -126,5 +131,41 @@ exports.handleCallback = async (gateway, payload) => {
   } catch (err) {
     logger.error(`Callback error for gateway ${gateway}: ${err.message}`);
     throw new ErrorHandler(500, 'Callback error');
+  }
+};
+
+// Added: Handle referral bonus logic
+exports.handleReferralBonus = async (paymentId) => {
+  try {
+    const payment = await Payment.findById(paymentId).populate('user');
+    if (!payment || payment.status !== 'success') {
+      logger.info(`No referral bonus for payment ${paymentId}: invalid payment`);
+      return;
+    }
+
+    const referral = await Referral.findOne({ referred: payment.user._id, status: 'pending' });
+    if (!referral) {
+      logger.info(`No referral bonus for payment ${paymentId}: no pending referral`);
+      return;
+    }
+
+    const bonusPercent = parseFloat(process.env.REFERRAL_BONUS_PERCENT) || 4;
+    const bonusAmount = (payment.amount * bonusPercent) / 100;
+
+    referral.bonusAmount = bonusAmount;
+    referral.status = 'completed';
+    await referral.save();
+
+    const referrer = await User.findById(referral.referrer);
+    if (referrer) {
+      referrer.balance = (referrer.balance || 0) + bonusAmount;
+      await referrer.save();
+      await emailService.sendBonusNotification(referrer.email, bonusAmount, payment.currency);
+      await smsService.sendBonusNotification(`+${referrer.countryCode}${referrer.phone}`, bonusAmount, payment.currency);
+      logger.info(`Referral bonus applied: ${bonusAmount} ${payment.currency} for referrer ${referral.referrer}`);
+    }
+  } catch (err) {
+    logger.error(`Referral bonus error for payment ${paymentId}: ${err.message}`);
+    throw new ErrorHandler(500, 'Referral bonus error');
   }
 };

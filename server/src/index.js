@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const investmentRoutes = require('./routes/investmentRoutes');
@@ -13,22 +14,37 @@ const errorMiddleware = require('./middlewares/errorMiddleware');
 const maintenanceMiddleware = require('./middlewares/maintenanceMiddleware');
 const logger = require('./utils/logger');
 
-// Clear module cache for userController
+// Log file paths
+console.log('Loading routes from:', {
+  authRoutes: path.resolve(__dirname, './routes/authRoutes.js'),
+  userRoutes: path.resolve(__dirname, './routes/userRoutes.js'),
+  paymentRoutes: path.resolve(__dirname, './routes/paymentRoutes.js')
+});
+
+// Clear module cache
+delete require.cache[require.resolve('./controllers/authController')];
+delete require.cache[require.resolve('./controllers/paymentController')];
 delete require.cache[require.resolve('./controllers/userController')];
+delete require.cache[require.resolve('./middlewares/authMiddleware')];
+delete require.cache[require.resolve('./middlewares/validationMiddleware')];
+delete require.cache[require.resolve('./services/paymentService')];
+delete require.cache[require.resolve('./services/emailService')];
+delete require.cache[require.resolve('./services/smsService')];
+delete require.cache[require.resolve('./utils/errorHandler')];
+delete require.cache[require.resolve('./utils/logger')];
+delete require.cache[require.resolve('./routes/authRoutes')];
+delete require.cache[require.resolve('./routes/paymentRoutes')];
 
 const app = express();
 
 // Allowed origins for CORS
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'https://ef8873279cee.ngrok-free.app', // Prioritize .env
-  'http://localhost:3000', // Local dev
-  'http://localhost:5173', // Vite default port
+  process.env.CLIENT_URL || 'https://ef8873279cee.ngrok-free.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
 ];
 
-// Use Helmet for security
 app.use(helmet());
-
-// CORS configuration
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -43,19 +59,24 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Fix: Add request logging middleware
 app.use((req, res, next) => {
   logger.info(`Incoming ${req.method} ${req.url} from ${req.get('Origin') || 'unknown'}`);
   next();
 });
 
-// Parse JSON and URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(maintenanceMiddleware);
 
-// Routes
+console.log('Registering routes:', {
+  authRoutes: !!authRoutes,
+  userRoutes: !!userRoutes,
+  investmentRoutes: !!investmentRoutes,
+  paymentRoutes: !!paymentRoutes,
+  adminRoutes: !!adminRoutes,
+  commentRoutes: !!commentRoutes
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/investments', investmentRoutes);
@@ -63,7 +84,8 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/comments', commentRoutes);
 
-// Error handler
 app.use(errorMiddleware);
 
 module.exports = app;
+
+console.log('index exports:', module.exports);

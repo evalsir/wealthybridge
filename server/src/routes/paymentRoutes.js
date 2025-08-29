@@ -1,16 +1,31 @@
-// src/routes/paymentRoutes.js
+// server/src/routes/paymentRoutes.js
 const express = require('express');
 const { protect } = require('../middlewares/authMiddleware');
-const { processPayment, capturePayment, paymentCallback } = require('../controllers/paymentController');
+const { processPayment, capturePayment } = require('../controllers/paymentController');
+const { processPaymentCallback } = require('../controllers/authController'); // Import processPaymentCallback
+const { validatePaymentCallback } = require('../middlewares/validationMiddleware'); // Import validation
+const logger = require('../utils/logger');
 
 const router = express.Router();
 
-// Debug import
-console.log('paymentController in paymentRoutes:', { processPayment, capturePayment, paymentCallback });
+// Debug imports
+console.log('paymentController in paymentRoutes:', { processPayment, capturePayment });
+console.log('authController in paymentRoutes:', { processPaymentCallback });
+console.log('validationMiddleware in paymentRoutes:', { validatePaymentCallback });
 
 // Routes for payment functionality
-router.post('/process', protect, processPayment); // Line 7
-router.post('/capture/:gateway', protect, capturePayment); // Line 8
-router.post('/callback/:gateway', paymentCallback); // Line 9: Fixed to use paymentCallback
+router.post('/process', protect, processPayment);
+router.post('/capture/:gateway', protect, capturePayment);
+router.post('/callback/:gateway', protect, validatePaymentCallback, processPaymentCallback);
+
+// Debug: Log all routes
+router.stack.forEach((r) => {
+  if (r.route && r.route.path) {
+    logger.info(`Registered payment route: ${Object.keys(r.route.methods).join(',')} ${r.route.path}`);
+  }
+});
 
 module.exports = router;
+
+// Debug: Log module exports
+console.log('paymentRoutes exports:', module.exports);

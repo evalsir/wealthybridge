@@ -1,4 +1,3 @@
-
 // server/src/middlewares/validationMiddleware.js
 const Joi = require('joi');
 const ErrorHandler = require('../utils/errorHandler');
@@ -26,13 +25,20 @@ exports.validateSignup = (req, res, next) => {
     }),
     countryCode: Joi.string()
       .length(2)
-      .uppercase() // Fix: Changed upper() to uppercase()
+      .uppercase()
       .invalid(...paypalUnsupportedCountryCodes)
       .required()
       .messages({
         'string.length': 'Country code must be 2 characters',
         'any.invalid': 'Country not supported by PayPal',
         'string.empty': 'Country code is required',
+      }),
+    phoneCountryCode: Joi.string()
+      .pattern(/^\+\d{1,4}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Phone country code must start with + followed by 1-4 digits',
+        'string.empty': 'Phone country code is required',
       }),
     phone: Joi.string().pattern(/^\d{9,12}$/).required().messages({
       'string.pattern.base': 'Phone number must be 9-12 digits',
@@ -75,8 +81,49 @@ exports.validateSignup = (req, res, next) => {
   next();
 };
 
+// Check user validation
+// ✅ Highlighted changes with comments
+exports.validateCheckUser = (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required().messages({
+      'string.email': 'Invalid email address',
+      'string.empty': 'Email is required',
+    }),
+    phoneCountryCode: Joi.string()
+      .pattern(/^\+\d{1,4}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Phone country code must start with + followed by 1-4 digits',
+        'string.empty': 'Phone country code is required',
+      }),
+    phone: Joi.string().pattern(/^\d{9,12}$/).required().messages({
+      'string.pattern.base': 'Phone number must be 9-12 digits',
+      'string.empty': 'Phone number is required',
+    }),
+    //  ADDED: Allow optional countryCode for ISO like "KE"
+    countryCode: Joi.string()
+      .length(2)
+      .uppercase()
+      .optional()
+      .messages({
+        'string.length': 'Country code must be exactly 2 characters (ISO)',
+      }),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details[0].message;
+    logger.warn(`Validation error in check user: ${errorMessage}`, {
+      errors: error.details,
+      body: req.body,
+    });
+    return next(new ErrorHandler(400, errorMessage));
+  }
+  next();
+};
 // OTP verification validation
-exports.validateVerifyOTPs = (req, res, next) => {
+// Validate Email OTP
+exports.validateVerifyEmailOTP = (req, res, next) => {
   const schema = Joi.object({
     userId: Joi.string().required().messages({
       'string.empty': 'User ID is required',
@@ -85,25 +132,36 @@ exports.validateVerifyOTPs = (req, res, next) => {
       'string.length': 'Email OTP must be 6 characters',
       'string.empty': 'Email OTP is required',
     }),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details[0].message;
+    logger.warn(`Validation error in verify email OTP: ${errorMessage}`, {
+      errors: error.details,
+      body: req.body,
+    });
+    return next(new ErrorHandler(400, errorMessage));
+  }
+  next();
+};
+
+// Validate Phone OTP
+exports.validateVerifyPhoneOTP = (req, res, next) => {
+  const schema = Joi.object({
+    userId: Joi.string().required().messages({
+      'string.empty': 'User ID is required',
+    }),
     phoneOTP: Joi.string().length(6).required().messages({
       'string.length': 'Phone OTP must be 6 characters',
       'string.empty': 'Phone OTP is required',
-    }),
-    paymentGateway: Joi.string().required().messages({
-      'string.empty': 'Payment gateway is required',
-    }),
-    paymentDetails: Joi.object().required().messages({
-      'object.base': 'Payment details must be an object',
-    }),
-    currency: Joi.string().default('USD').messages({
-      'string.base': 'Currency must be a string',
     }),
   });
 
   const { error } = schema.validate(req.body, { abortEarly: false });
   if (error) {
     const errorMessage = error.details[0].message;
-    logger.warn(`Validation error in verify OTPs: ${errorMessage}`, {
+    logger.warn(`Validation error in verify phone OTP: ${errorMessage}`, {
       errors: error.details,
       body: req.body,
     });
@@ -154,6 +212,96 @@ exports.validate2FA = (req, res, next) => {
   if (error) {
     const errorMessage = error.details[0].message;
     logger.warn(`Validation error in 2FA: ${errorMessage}`, {
+      errors: error.details,
+      body: req.body,
+    });
+    return next(new ErrorHandler(400, errorMessage));
+  }
+  next();
+};
+
+// Resend 2FA OTP validation
+exports.validateResend2FAOTP = (req, res, next) => {
+  const schema = Joi.object({
+    userId: Joi.string().required().messages({
+      'string.empty': 'User ID is required',
+    }),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details[0].message;
+    logger.warn(`Validation error in resend 2FA OTP: ${errorMessage}`, {
+      errors: error.details,
+      body: req.body,
+    });
+    return next(new ErrorHandler(400, errorMessage));
+  }
+  next();
+};
+
+// Forgot Password validation
+exports.validateForgotPassword = (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required().messages({
+      'string.email': 'Invalid email address',
+      'string.empty': 'Email is required',
+    }),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details[0].message;
+    logger.warn(`Validation error in forgot password: ${errorMessage}`, {
+      errors: error.details,
+      body: req.body,
+    });
+    return next(new ErrorHandler(400, errorMessage));
+  }
+  next();
+};
+
+// Resend Email OTP validation
+exports.validateResendEmailOTP = (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required().messages({
+      'string.email': 'Invalid email address',
+      'string.empty': 'Email is required',
+    }),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details[0].message;
+    logger.warn(`Validation error in resend email OTP: ${errorMessage}`, {
+      errors: error.details,
+      body: req.body,
+    });
+    return next(new ErrorHandler(400, errorMessage));
+  }
+  next();
+};
+
+// Resend Phone OTP validation
+exports.validateResendPhoneOTP = (req, res, next) => {
+  const schema = Joi.object({
+    phoneCountryCode: Joi.string()
+      .pattern(/^\+\d{1,4}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Phone country code must start with + followed by 1-4 digits',
+        'string.empty': 'Phone country code is required',
+      }),
+    phone: Joi.string().pattern(/^\d{9,12}$/).required().messages({
+      'string.pattern.base': 'Phone number must be 9-12 digits',
+      'string.empty': 'Phone number is required',
+    }),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details[0].message;
+    logger.warn(`Validation error in resend phone OTP: ${errorMessage}`, {
       errors: error.details,
       body: req.body,
     });
@@ -347,3 +495,62 @@ exports.validateCreateInvestment = (req, res, next) => {
   }
   next();
 };
+
+// Payment callback validation
+exports.validatePaymentCallback = (req, res, next) => {
+  const schema = Joi.object({
+    userId: Joi.string().required().messages({
+      'string.empty': 'User ID is required',
+    }),
+    transactionId: Joi.string().required().messages({
+      'string.empty': 'Transaction ID is required',
+    }),
+    email: Joi.string().email().required().messages({
+      'string.email': 'Invalid email address',
+      'string.empty': 'Email is required',
+    }),
+    name: Joi.string().trim().required().messages({
+      'string.empty': 'Name is required',
+    }),
+    phoneNumber: Joi.string().pattern(/^\+\d{1,4}\d{9,12}$/).required().messages({
+      'string.pattern.base': 'Phone number must include country code and be 9-12 digits',
+      'string.empty': 'Phone number is required',
+    }),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details[0].message;
+    logger.warn(`Validation error in payment callback: ${errorMessage}`, {
+      errors: error.details,
+      body: req.body,
+    });
+    return next(new ErrorHandler(400, errorMessage));
+  }
+  next();
+};
+module.exports = {
+  validateSignup: exports.validateSignup,
+  validateCheckUser: exports.validateCheckUser,
+  //validateVerifyOTPs: exports.validateVerifyOTPs,
+   validateVerifyEmailOTP:exports.validateVerifyEmailOTP,
+  validateVerifyPhoneOTP:exports.validateVerifyPhoneOTP,
+  validateLogin: exports.validateLogin,
+  validate2FA: exports.validate2FA,
+  validateResend2FAOTP: exports.validateResend2FAOTP,
+  validateForgotPassword: exports.validateForgotPassword,
+  validateInvest: exports.validateInvest,
+  validateWithdraw: exports.validateWithdraw,
+  validateComment: exports.validateComment,
+  validateManageComment: exports.validateManageComment,
+  validateUpdateDailyLimit: exports.validateUpdateDailyLimit,
+  validateToggleMaintenance: exports.validateToggleMaintenance,
+  validateCreateInvestment: exports.validateCreateInvestment,
+  validatePaymentCallback: exports.validatePaymentCallback,
+  validateResendEmailOTP: exports.validateResendEmailOTP,
+  validateResendPhoneOTP: exports.validateResendPhoneOTP,
+};
+
+
+
+console.log('validationMiddleware exports:', module.exports);

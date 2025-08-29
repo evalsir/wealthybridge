@@ -1,4 +1,3 @@
-
 // src/components/SignUpForm/SignUpForm.jsx
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -40,7 +39,8 @@ const SignUpForm = () => {
     username: "",
     email: "",
     phone: "",
-    countryCode: "+254",
+    countryCode: "", // ISO country code (e.g., KE)
+    phoneCountryCode: "", // Phone country code (e.g., +254)
     password: "",
     referral: "",
     termsAccepted: false,
@@ -73,6 +73,174 @@ const SignUpForm = () => {
     { value: "mastercard", label: "Mastercard", redirect: false },
   ];
 
+  // Comprehensive country list with ISO and phone codes
+  const countryOptions = [
+    { isoCode: "AL", phoneCode: "+355", label: "Albania (+355)" },
+    { isoCode: "DZ", phoneCode: "+213", label: "Algeria (+213)" },
+    { isoCode: "AD", phoneCode: "+376", label: "Andorra (+376)" },
+    { isoCode: "AO", phoneCode: "+244", label: "Angola (+244)" },
+    { isoCode: "AG", phoneCode: "+1-268", label: "Antigua and Barbuda (+1-268)" },
+    { isoCode: "AR", phoneCode: "+54", label: "Argentina (+54)" },
+    { isoCode: "AM", phoneCode: "+374", label: "Armenia (+374)" },
+    { isoCode: "AU", phoneCode: "+61", label: "Australia (+61)" },
+    { isoCode: "AT", phoneCode: "+43", label: "Austria (+43)" },
+    { isoCode: "AZ", phoneCode: "+994", label: "Azerbaijan (+994)" },
+    { isoCode: "BS", phoneCode: "+1-242", label: "Bahamas (+1-242)" },
+    { isoCode: "BH", phoneCode: "+973", label: "Bahrain (+973)" },
+    { isoCode: "BD", phoneCode: "+880", label: "Bangladesh (+880)" },
+    { isoCode: "BB", phoneCode: "+1-246", label: "Barbados (+1-246)" },
+    { isoCode: "BY", phoneCode: "+375", label: "Belarus (+375)" },
+    { isoCode: "BE", phoneCode: "+32", label: "Belgium (+32)" },
+    { isoCode: "BZ", phoneCode: "+501", label: "Belize (+501)" },
+    { isoCode: "BJ", phoneCode: "+229", label: "Benin (+229)" },
+    { isoCode: "BT", phoneCode: "+975", label: "Bhutan (+975)" },
+    { isoCode: "BO", phoneCode: "+591", label: "Bolivia (+591)" },
+    { isoCode: "BA", phoneCode: "+387", label: "Bosnia and Herzegovina (+387)" },
+    { isoCode: "BW", phoneCode: "+267", label: "Botswana (+267)" },
+    { isoCode: "BR", phoneCode: "+55", label: "Brazil (+55)" },
+    { isoCode: "BN", phoneCode: "+673", label: "Brunei (+673)" },
+    { isoCode: "BG", phoneCode: "+359", label: "Bulgaria (+359)" },
+    { isoCode: "BF", phoneCode: "+226", label: "Burkina Faso (+226)" },
+    { isoCode: "BI", phoneCode: "+257", label: "Burundi (+257)" },
+    { isoCode: "KH", phoneCode: "+855", label: "Cambodia (+855)" },
+    { isoCode: "CM", phoneCode: "+237", label: "Cameroon (+237)" },
+    { isoCode: "CA", phoneCode: "+1", label: "Canada (+1)" },
+    { isoCode: "CV", phoneCode: "+238", label: "Cape Verde (+238)" },
+    { isoCode: "CL", phoneCode: "+56", label: "Chile (+56)" },
+    { isoCode: "CO", phoneCode: "+57", label: "Colombia (+57)" },
+    { isoCode: "KM", phoneCode: "+269", label: "Comoros (+269)" },
+    { isoCode: "CR", phoneCode: "+506", label: "Costa Rica (+506)" },
+    { isoCode: "HR", phoneCode: "+385", label: "Croatia (+385)" },
+    { isoCode: "CY", phoneCode: "+357", label: "Cyprus (+357)" },
+    { isoCode: "CZ", phoneCode: "+420", label: "Czech Republic (+420)" },
+    { isoCode: "CD", phoneCode: "+243", label: "Democratic Republic of the Congo (+243)" },
+    { isoCode: "DK", phoneCode: "+45", label: "Denmark (+45)" },
+    { isoCode: "DJ", phoneCode: "+253", label: "Djibouti (+253)" },
+    { isoCode: "DM", phoneCode: "+1-767", label: "Dominica (+1-767)" },
+    { isoCode: "DO", phoneCode: "+1-809", label: "Dominican Republic (+1-809)" },
+    { isoCode: "EC", phoneCode: "+593", label: "Ecuador (+593)" },
+    { isoCode: "EG", phoneCode: "+20", label: "Egypt (+20)" },
+    { isoCode: "SV", phoneCode: "+503", label: "El Salvador (+503)" },
+    { isoCode: "EE", phoneCode: "+372", label: "Estonia (+372)" },
+    { isoCode: "SZ", phoneCode: "+268", label: "Eswatini (+268)" },
+    { isoCode: "ET", phoneCode: "+251", label: "Ethiopia (+251)" },
+    { isoCode: "FJ", phoneCode: "+679", label: "Fiji (+679)" },
+    { isoCode: "FI", phoneCode: "+358", label: "Finland (+358)" },
+    { isoCode: "FR", phoneCode: "+33", label: "France (+33)" },
+    { isoCode: "GA", phoneCode: "+241", label: "Gabon (+241)" },
+    { isoCode: "GM", phoneCode: "+220", label: "Gambia (+220)" },
+    { isoCode: "GE", phoneCode: "+995", label: "Georgia (+995)" },
+    { isoCode: "DE", phoneCode: "+49", label: "Germany (+49)" },
+    { isoCode: "GH", phoneCode: "+233", label: "Ghana (+233)" },
+    { isoCode: "GR", phoneCode: "+30", label: "Greece (+30)" },
+    { isoCode: "GD", phoneCode: "+1-473", label: "Grenada (+1-473)" },
+    { isoCode: "GT", phoneCode: "+502", label: "Guatemala (+502)" },
+    { isoCode: "GN", phoneCode: "+224", label: "Guinea (+224)" },
+    { isoCode: "GW", phoneCode: "+245", label: "Guinea-Bissau (+245)" },
+    { isoCode: "GY", phoneCode: "+592", label: "Guyana (+592)" },
+    { isoCode: "HN", phoneCode: "+504", label: "Honduras (+504)" },
+    { isoCode: "HK", phoneCode: "+852", label: "Hong Kong (+852)" },
+    { isoCode: "HU", phoneCode: "+36", label: "Hungary (+36)" },
+    { isoCode: "IS", phoneCode: "+354", label: "Iceland (+354)" },
+    { isoCode: "IN", phoneCode: "+91", label: "India (+91)" },
+    { isoCode: "ID", phoneCode: "+62", label: "Indonesia (+62)" },
+    { isoCode: "IE", phoneCode: "+353", label: "Ireland (+353)" },
+    { isoCode: "IL", phoneCode: "+972", label: "Israel (+972)" },
+    { isoCode: "IT", phoneCode: "+39", label: "Italy (+39)" },
+    { isoCode: "JM", phoneCode: "+1-876", label: "Jamaica (+1-876)" },
+    { isoCode: "JP", phoneCode: "+81", label: "Japan (+81)" },
+    { isoCode: "JO", phoneCode: "+962", label: "Jordan (+962)" },
+    { isoCode: "KZ", phoneCode: "+7", label: "Kazakhstan (+7)" },
+    { isoCode: "KE", phoneCode: "+254", label: "Kenya (+254)" },
+    { isoCode: "KW", phoneCode: "+965", label: "Kuwait (+965)" },
+    { isoCode: "KG", phoneCode: "+996", label: "Kyrgyzstan (+996)" },
+    { isoCode: "LA", phoneCode: "+856", label: "Laos (+856)" },
+    { isoCode: "LV", phoneCode: "+371", label: "Latvia (+371)" },
+    { isoCode: "LB", phoneCode: "+961", label: "Lebanon (+961)" },
+    { isoCode: "LS", phoneCode: "+266", label: "Lesotho (+266)" },
+    { isoCode: "LR", phoneCode: "+231", label: "Liberia (+231)" },
+    { isoCode: "LI", phoneCode: "+423", label: "Liechtenstein (+423)" },
+    { isoCode: "LT", phoneCode: "+370", label: "Lithuania (+370)" },
+    { isoCode: "LU", phoneCode: "+352", label: "Luxembourg (+352)" },
+    { isoCode: "MG", phoneCode: "+261", label: "Madagascar (+261)" },
+    { isoCode: "MW", phoneCode: "+265", label: "Malawi (+265)" },
+    { isoCode: "MY", phoneCode: "+60", label: "Malaysia (+60)" },
+    { isoCode: "MV", phoneCode: "+960", label: "Maldives (+960)" },
+    { isoCode: "ML", phoneCode: "+223", label: "Mali (+223)" },
+    { isoCode: "MT", phoneCode: "+356", label: "Malta (+356)" },
+    { isoCode: "MR", phoneCode: "+222", label: "Mauritania (+222)" },
+    { isoCode: "MU", phoneCode: "+230", label: "Mauritius (+230)" },
+    { isoCode: "MX", phoneCode: "+52", label: "Mexico (+52)" },
+    { isoCode: "MD", phoneCode: "+373", label: "Moldova (+373)" },
+    { isoCode: "MC", phoneCode: "+377", label: "Monaco (+377)" },
+    { isoCode: "MN", phoneCode: "+976", label: "Mongolia (+976)" },
+    { isoCode: "ME", phoneCode: "+382", label: "Montenegro (+382)" },
+    { isoCode: "MA", phoneCode: "+212", label: "Morocco (+212)" },
+    { isoCode: "MZ", phoneCode: "+258", label: "Mozambique (+258)" },
+    { isoCode: "NA", phoneCode: "+264", label: "Namibia (+264)" },
+    { isoCode: "NP", phoneCode: "+977", label: "Nepal (+977)" },
+    { isoCode: "NL", phoneCode: "+31", label: "Netherlands (+31)" },
+    { isoCode: "NZ", phoneCode: "+64", label: "New Zealand (+64)" },
+    { isoCode: "NI", phoneCode: "+505", label: "Nicaragua (+505)" },
+    { isoCode: "NE", phoneCode: "+227", label: "Niger (+227)" },
+    { isoCode: "NG", phoneCode: "+234", label: "Nigeria (+234)" },
+    { isoCode: "MK", phoneCode: "+389", label: "North Macedonia (+389)" },
+    { isoCode: "NO", phoneCode: "+47", label: "Norway (+47)" },
+    { isoCode: "OM", phoneCode: "+968", label: "Oman (+968)" },
+    { isoCode: "PK", phoneCode: "+92", label: "Pakistan (+92)" },
+    { isoCode: "PA", phoneCode: "+507", label: "Panama (+507)" },
+    { isoCode: "PG", phoneCode: "+675", label: "Papua New Guinea (+675)" },
+    { isoCode: "PY", phoneCode: "+595", label: "Paraguay (+595)" },
+    { isoCode: "PE", phoneCode: "+51", label: "Peru (+51)" },
+    { isoCode: "PH", phoneCode: "+63", label: "Philippines (+63)" },
+    { isoCode: "PL", phoneCode: "+48", label: "Poland (+48)" },
+    { isoCode: "PT", phoneCode: "+351", label: "Portugal (+351)" },
+    { isoCode: "QA", phoneCode: "+974", label: "Qatar (+974)" },
+    { isoCode: "RO", phoneCode: "+40", label: "Romania (+40)" },
+    { isoCode: "RU", phoneCode: "+7", label: "Russia (+7)" },
+    { isoCode: "RW", phoneCode: "+250", label: "Rwanda (+250)" },
+    { isoCode: "KN", phoneCode: "+1-869", label: "Saint Kitts and Nevis (+1-869)" },
+    { isoCode: "LC", phoneCode: "+1-758", label: "Saint Lucia (+1-758)" },
+    { isoCode: "VC", phoneCode: "+1-784", label: "Saint Vincent and the Grenadines (+1-784)" },
+    { isoCode: "WS", phoneCode: "+685", label: "Samoa (+685)" },
+    { isoCode: "SM", phoneCode: "+378", label: "San Marino (+378)" },
+    { isoCode: "ST", phoneCode: "+239", label: "Sao Tome and Principe (+239)" },
+    { isoCode: "SA", phoneCode: "+966", label: "Saudi Arabia (+966)" },
+    { isoCode: "SN", phoneCode: "+221", label: "Senegal (+221)" },
+    { isoCode: "RS", phoneCode: "+381", label: "Serbia (+381)" },
+    { isoCode: "SC", phoneCode: "+248", label: "Seychelles (+248)" },
+    { isoCode: "SL", phoneCode: "+232", label: "Sierra Leone (+232)" },
+    { isoCode: "SG", phoneCode: "+65", label: "Singapore (+65)" },
+    { isoCode: "SK", phoneCode: "+421", label: "Slovakia (+421)" },
+    { isoCode: "SI", phoneCode: "+386", label: "Slovenia (+386)" },
+    { isoCode: "ZA", phoneCode: "+27", label: "South Africa (+27)" },
+    { isoCode: "KR", phoneCode: "+82", label: "South Korea (+82)" },
+    { isoCode: "ES", phoneCode: "+34", label: "Spain (+34)" },
+    { isoCode: "LK", phoneCode: "+94", label: "Sri Lanka (+94)" },
+    { isoCode: "SR", phoneCode: "+597", label: "Suriname (+597)" },
+    { isoCode: "SE", phoneCode: "+46", label: "Sweden (+46)" },
+    { isoCode: "CH", phoneCode: "+41", label: "Switzerland (+41)" },
+    { isoCode: "TW", phoneCode: "+886", label: "Taiwan (+886)" },
+    { isoCode: "TJ", phoneCode: "+992", label: "Tajikistan (+992)" },
+    { isoCode: "TZ", phoneCode: "+255", label: "Tanzania (+255)" },
+    { isoCode: "TH", phoneCode: "+66", label: "Thailand (+66)" },
+    { isoCode: "TG", phoneCode: "+228", label: "Togo (+228)" },
+    { isoCode: "TT", phoneCode: "+1-868", label: "Trinidad and Tobago (+1-868)" },
+    { isoCode: "TN", phoneCode: "+216", label: "Tunisia (+216)" },
+    { isoCode: "TR", phoneCode: "+90", label: "Turkey (+90)" },
+    { isoCode: "UG", phoneCode: "+256", label: "Uganda (+256)" },
+    { isoCode: "UA", phoneCode: "+380", label: "Ukraine (+380)" },
+    { isoCode: "AE", phoneCode: "+971", label: "United Arab Emirates (+971)" },
+    { isoCode: "GB", phoneCode: "+44", label: "United Kingdom (+44)" },
+    { isoCode: "US", phoneCode: "+1", label: "United States (+1)" },
+    { isoCode: "UY", phoneCode: "+598", label: "Uruguay (+598)" },
+    { isoCode: "UZ", phoneCode: "+998", label: "Uzbekistan (+998)" },
+    { isoCode: "VU", phoneCode: "+678", label: "Vanuatu (+678)" },
+    { isoCode: "VN", phoneCode: "+84", label: "Vietnam (+84)" },
+    { isoCode: "ZM", phoneCode: "+260", label: "Zambia (+260)" },
+    { isoCode: "ZW", phoneCode: "+263", label: "Zimbabwe (+263)" },
+  ];
+
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const userId = query.get("userId");
@@ -90,112 +258,143 @@ const SignUpForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value.trim(),
-    }));
+    if (name === "countryCode") {
+      const selectedCountry = countryOptions.find(c => c.isoCode === value);
+      setFormData((prevData) => ({
+        ...prevData,
+        countryCode: value,
+        phoneCountryCode: selectedCountry ? selectedCountry.phoneCode : prevData.phoneCountryCode,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: type === "checkbox" ? checked : value.trim(),
+      }));
+    }
   };
 
-  const handleCheckUserStatus = async (e) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    setError("");
-    setSuccess("");
+  //adjusted
+const handleCheckUserStatus = async (e) => {
+  e.preventDefault();
+  if (isSubmitting) return;
+  setIsSubmitting(true);
+  setError("");
+  setSuccess("");
 
-    if (!formData.firstName) {
-      setError(t("first name required"));
-      setIsSubmitting(false);
-      return;
-    }
-    if (!formData.secondName) {
-      setError(t("last name required"));
-      setIsSubmitting(false);
-      return;
-    }
-    if (!formData.username) {
-      setError(t("username required"));
-      setIsSubmitting(false);
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError(t("invalid email"));
-      setIsSubmitting(false);
-      return;
-    }
-    if (!countryCodeRegex.test(formData.countryCode)) {
-      setError(t("invalid_country_code"));
-      setIsSubmitting(false);
-      return;
-    }
-    if (!phoneRegex.test(formData.phone)) {
-      setError(t("invalid phone"));
-      setIsSubmitting(false);
-      return;
-    }
-    if (!strongPassword.test(formData.password)) {
-      setError(t("strong password required"));
-      setIsSubmitting(false);
-      return;
-    }
-    if (!formData.termsAccepted) {
-      setError(t("terms required"));
-      setIsSubmitting(false);
-      return;
-    }
+  // ✅ Validation section (unchanged except added phoneCountryCode check)
+  if (!formData.firstName) {
+    setError(t("first name required"));
+    setIsSubmitting(false);
+    return;
+  }
+  if (!formData.secondName) {
+    setError(t("last name required"));
+    setIsSubmitting(false);
+    return;
+  }
+  if (!formData.username) {
+    setError(t("username required"));
+    setIsSubmitting(false);
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    setError(t("invalid email"));
+    setIsSubmitting(false);
+    return;
+  }
+  if (!formData.countryCode) {
+    setError(t("country required")); // ISO country code e.g., "KE"
+    setIsSubmitting(false);
+    return;
+  }
+  if (!formData.phoneCountryCode) {
+    setError(t("phone country code required")); // Added new check for +254
+    setIsSubmitting(false);
+    return;
+  }
+  if (!countryCodeRegex.test(formData.phoneCountryCode)) {
+    setError(t("invalid_country_code")); // e.g., must match +xxx format
+    setIsSubmitting(false);
+    return;
+  }
+  if (!phoneRegex.test(formData.phone)) {
+    setError(t("invalid phone"));
+    setIsSubmitting(false);
+    return;
+  }
+  if (!strongPassword.test(formData.password)) {
+    setError(t("strong password required"));
+    setIsSubmitting(false);
+    return;
+  }
+  if (!formData.termsAccepted) {
+    setError(t("terms required"));
+    setIsSubmitting(false);
+    return;
+  }
 
-    console.log("Checking user status:", {
+  // ✅ Log the correct data being sent
+  console.log("Checking user status:", {
+    email: formData.email,
+    phone: formData.phone,
+    phoneCountryCode: formData.phoneCountryCode, // Changed from countryCode to correct field
+    countryCode: formData.countryCode // Added ISO country code explicitly
+  });
+
+  try {
+    // ✅ FIX: Send both ISO countryCode and phoneCountryCode instead of mixing them up
+    const res = await checkUserStatus({
       email: formData.email,
       phone: formData.phone,
-      countryCode: formData.countryCode,
+      phoneCountryCode: formData.phoneCountryCode, // e.g., +254
+      countryCode: formData.countryCode // e.g., KE
     });
-    try {
-      const res = await checkUserStatus({
-        email: formData.email,
-        phone: formData.phone,
-        countryCode: formData.countryCode,
-      });
-      console.log("Check user response:", res.data);
-      // Fix: Handle specific response messages and status codes
-      if (res.status === 200) {
-        if (res.data.token) {
-          localStorage.setItem("token", res.data.token); // Store token
-        }
-        setUserId(res.data.userId);
-        if (res.data.message === "email_otp_resent") {
-          setSuccess(t("otp.email_otp_resent"));
-          setStep("emailOTP");
-        } else if (res.data.message === "phone_otp_resent") {
-          setSuccess(t("otp.phone_otp_resent"));
-          setStep("phoneOTP");
-        } else if (res.data.message === "payment_required") {
-          setSuccess(t("You are already registered and your account is active. Please proceed to pay the activation fee to complete registration."));
-          setStep("payment");
-        } else if (res.data.message === "user_verified") {
-          setSuccess(t("user_already_verified"));
-          navigate("/signin");
-        } else {
-          setError(t("unexpected_response"));
-        }
-      } else if (res.status === 404) {
-        console.log("User not found, proceeding to signup");
-        await handleSubmit(e);
-      } else {
-        setError(t(res.data.message || "unexpected_response"));
+
+    console.log("Check user response:", res.data);
+
+    if (res.status === 200) {
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
       }
-    } catch (error) {
-      console.error("Check user error:", error);
-      // Fix: Handle error.status explicitly
-      if (error.status === 404) {
-        console.log("User not found, proceeding to signup");
-        await handleSubmit(e);
+      setUserId(res.data.userId);
+
+      // ✅ Keep the original logic for handling different messages
+      if (res.data.message === "email_otp_resent") {
+        setSuccess(t("otp.email_otp_resent"));
+        setStep("emailOTP");
+      } else if (res.data.message === "phone_otp_resent") {
+        setSuccess(t("otp.phone_otp_resent"));
+        setStep("phoneOTP");
+      } else if (res.data.message === "payment_required") {
+        setSuccess(
+          t("You are already registered and your account is active. Please proceed to pay the activation fee to complete registration.")
+        );
+        setStep("payment");
+      } else if (res.data.message === "user_verified") {
+        setSuccess(t("user_already_verified"));
+        navigate("/signin");
       } else {
-        setError(t(error.message || "check_user_failed"));
+        setError(t("unexpected_response"));
       }
-    } finally {
-      setIsSubmitting(false);
+    } else if (res.status === 404) {
+      console.log("User not found, proceeding to signup");
+      await handleSubmit(e); // ✅ Original logic preserved
+    } else {
+      setError(t(res.data.message || "unexpected_response"));
     }
-  };
+  } catch (error) {
+    console.error("Check user error:", error);
+    if (error.status === 404) {
+      console.log("User not found, proceeding to signup");
+      await handleSubmit(e);
+    } else {
+      setError(t(error.message || "check_user_failed"));
+    }
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -210,7 +409,7 @@ const SignUpForm = () => {
       console.log("Signup response:", res.data);
       if (res.status === 201 || res.status === 200) {
         if (res.data.token) {
-          localStorage.setItem("token", res.data.token); // Store token
+          localStorage.setItem("token", res.data.token);
         }
         setSuccess(t("user_registered"));
         setUserId(res.data.userId);
@@ -238,11 +437,11 @@ const SignUpForm = () => {
           const statusRes = await checkUserStatus({
             email: formData.email,
             phone: formData.phone,
-            countryCode: formData.countryCode,
+            countryCode: formData.phoneCountryCode,
           });
           console.log("Check user status after user_exists:", statusRes.data);
           if (statusRes.data.token) {
-            localStorage.setItem("token", statusRes.data.token); // Store token
+            localStorage.setItem("token", statusRes.data.token);
           }
           setUserId(statusRes.data.userId);
           if (statusRes.status === 200) {
@@ -262,10 +461,7 @@ const SignUpForm = () => {
             setError(t("check_user_failed"));
           }
         } catch (statusError) {
-          console.error(
-            "Check user status error after user_exists:",
-            statusError
-          );
+          console.error("Check user status error after user_exists:", statusError);
           setError(t("check_user_failed"));
         }
       } else {
@@ -282,10 +478,7 @@ const SignUpForm = () => {
       return;
     }
     if (isSubmitting) {
-      console.log(
-        "Ignoring duplicate OTP submission for email:",
-        formData.email
-      );
+      console.log("Ignoring duplicate OTP submission for email:", formData.email);
       return;
     }
     setIsSubmitting(true);
@@ -300,25 +493,17 @@ const SignUpForm = () => {
         setStep("phoneOTP");
       }
     } catch (error) {
-      console.error(
-        "Email OTP verification error:",
-        error
-      );
+      console.error("Email OTP verification error:", error);
       if (error.details === "no_otp_record") {
-        console.log(
-          "No OTP record found, checking user status to confirm verification"
-        );
+        console.log("No OTP record found, checking user status to confirm verification");
         try {
           const statusRes = await checkUserStatus({
             email: formData.email,
             phone: formData.phone,
-            countryCode: formData.countryCode,
+            countryCode: formData.phoneCountryCode,
           });
           console.log("Post-OTP user status:", statusRes.data);
-          if (
-            statusRes.status === 200 &&
-            statusRes.data.message === "phone_otp_resent"
-          ) {
+          if (statusRes.status === 200 && statusRes.data.message === "phone_otp_resent") {
             setSuccess(t("otp.email_verified"));
             setStep("phoneOTP");
           } else if (statusRes.data.message === "payment_required") {
@@ -331,10 +516,7 @@ const SignUpForm = () => {
             setError(t("email otp failed") + " " + t("no_otp_record"));
           }
         } catch (statusError) {
-          console.error(
-            "Post-OTP user status check error:",
-            statusError
-          );
+          console.error("Post-OTP user status check error:", statusError);
           setError(t("otp.email_otp_failed") + " " + t("no_otp_record"));
         }
       } else {
@@ -351,10 +533,7 @@ const SignUpForm = () => {
       return;
     }
     if (isSubmitting) {
-      console.log(
-        "Ignoring duplicate OTP submission for phone:",
-        formData.phone
-      );
+      console.log("Ignoring duplicate OTP submission for phone:", formData.phone);
       return;
     }
     setIsSubmitting(true);
@@ -362,47 +541,34 @@ const SignUpForm = () => {
     setSuccess("");
     console.log("Submitting phone OTP:", {
       phone: formData.phone,
-      countryCode: formData.countryCode,
+      countryCode: formData.phoneCountryCode,
       code: otp,
     });
     try {
       const res = await VerifyPhoneOTP({
         phone: formData.phone,
-        countryCode: formData.countryCode,
+        countryCode: formData.phoneCountryCode,
         code: otp,
       });
       console.log("Phone OTP response:", res.data);
       if (res.status === 200) {
         setSuccess(
-          t(
-            res.data.message ||
-              "Your phone number has been successfully verified. Please proceed with the activation fee payment below."
-          )
+          t(res.data.message || "Your phone number has been successfully verified. Please proceed with the activation fee payment below.")
         );
         setStep(formData.enable2FA ? "twoFactorOTP" : "payment");
       }
     } catch (error) {
-      console.error(
-        "Phone OTP verification error:",
-        error
-      );
+      console.error("Phone OTP verification error:", error);
       if (error.details === "no_otp_record") {
         try {
           const statusRes = await checkUserStatus({
             email: formData.email,
             phone: formData.phone,
-            countryCode: formData.countryCode,
+            countryCode: formData.phoneCountryCode,
           });
           console.log("Post-OTP user status:", statusRes.data);
-          if (
-            statusRes.status === 200 &&
-            statusRes.data.message === "payment_required"
-          ) {
-            setSuccess(
-              t(
-                "Your phone number has been successfully verified. Please proceed with the activation fee payment below."
-              )
-            );
+          if (statusRes.status === 200 && statusRes.data.message === "payment_required") {
+            setSuccess(t("Your phone number has been successfully verified. Please proceed with the activation fee payment below."));
             setStep("payment");
           } else if (statusRes.data.message === "user_verified") {
             setSuccess(t("user_already_verified"));
@@ -411,10 +577,7 @@ const SignUpForm = () => {
             setError(t("otp.phone_otp_failed") + " " + t("no_otp_record"));
           }
         } catch (statusError) {
-          console.error(
-            "Post-OTP user status check error:",
-            statusError
-          );
+          console.error("Post-OTP user status check error:", statusError);
           setError(t("otp.phone_otp_failed") + " " + t("no_otp_record"));
         }
       } else {
@@ -446,22 +609,16 @@ const SignUpForm = () => {
         setStep("payment");
       }
     } catch (error) {
-      console.error(
-        "2FA OTP verification error:",
-        error
-      );
+      console.error("2FA OTP verification error:", error);
       if (error.details === "no_otp_record") {
         try {
           const statusRes = await checkUserStatus({
             email: formData.email,
             phone: formData.phone,
-            countryCode: formData.countryCode,
+            countryCode: formData.phoneCountryCode,
           });
           console.log("Post-OTP user status:", statusRes.data);
-          if (
-            statusRes.status === 200 &&
-            statusRes.data.message === "payment_required"
-          ) {
+          if (statusRes.status === 200 && statusRes.data.message === "payment_required") {
             setSuccess(t("otp.2fa_setup_complete"));
             setStep("payment");
           } else if (statusRes.data.message === "user_verified") {
@@ -471,10 +628,7 @@ const SignUpForm = () => {
             setError(t("otp.2fa_otp_failed") + " " + t("no_otp_record"));
           }
         } catch (statusError) {
-          console.error(
-            "Post-OTP user status check error:",
-            statusError
-          );
+          console.error("Post-OTP user status check error:", statusError);
           setError(t("otp.2fa_otp_failed") + " " + t("no_otp_record"));
         }
       } else {
@@ -495,10 +649,7 @@ const SignUpForm = () => {
     setError("");
     setSuccess("");
 
-    const selectedMethod = paymentMethods.find(
-      (m) => m.value === paymentMethod
-    );
-
+    const selectedMethod = paymentMethods.find((m) => m.value === paymentMethod);
     const amountValue = Number(verificationAmount);
     if (amountValue < 5) {
       setError(t("minimum_verification_amount_error"));
@@ -511,7 +662,7 @@ const SignUpForm = () => {
       amount: amountValue,
       email: formData.email,
       name: `${formData.firstName} ${formData.secondName}`,
-      phoneNumber: phoneNumber || `${formData.countryCode}${formData.phone}`,
+      phoneNumber: phoneNumber || `${formData.phoneCountryCode}${formData.phone}`,
       isVerificationFee: true,
     };
 
@@ -523,7 +674,6 @@ const SignUpForm = () => {
       }
     }
 
-    // Fix: Add Stripe-specific handling for CardElement
     if (["stripe", "mastercard", "googlepay"].includes(paymentMethod)) {
       if (!stripe || !elements) {
         setError(t("stripe_not_loaded"));
@@ -574,7 +724,8 @@ const SignUpForm = () => {
             username: "",
             email: "",
             phone: "",
-            countryCode: "+254",
+            countryCode: "",
+            phoneCountryCode: "",
             password: "",
             referral: "",
             termsAccepted: false,
@@ -586,10 +737,7 @@ const SignUpForm = () => {
         setError(t(res.data.message || "payment initiation failed"));
       }
     } catch (error) {
-      console.error(
-        `Payment error for ${paymentMethod}:`,
-        error
-      );
+      console.error(`Payment error for ${paymentMethod}:`, error);
       if (error.message === "route_not_found") {
         setError(t("payment_method_unavailable", { method: paymentMethod }));
       } else {
@@ -600,25 +748,18 @@ const SignUpForm = () => {
     }
   };
 
-  const handlePaymentCallback = async ({
-    userId,
-    paymentMethod,
-    transactionId,
-  }) => {
+  const handlePaymentCallback = async ({ userId, paymentMethod, transactionId }) => {
     setIsSubmitting(true);
     setError("");
     setSuccess("");
     try {
-      const res = await processVerificationPayment(
-        `callback/${paymentMethod}`,
-        {
-          userId,
-          transactionId,
-          email: formData.email,
-          name: `${formData.firstName} ${formData.secondName}`,
-          phoneNumber: `${formData.countryCode}${formData.phone}`,
-        }
-      );
+      const res = await processVerificationPayment(`callback/${paymentMethod}`, {
+        userId,
+        transactionId,
+        email: formData.email,
+        name: `${formData.firstName} ${formData.secondName}`,
+        phoneNumber: `${formData.phoneCountryCode}${formData.phone}`,
+      });
       console.log("Payment callback response:", res.data);
       if (res.status === 200) {
         setSuccess(t(res.data.message || "payment_verified"));
@@ -628,7 +769,8 @@ const SignUpForm = () => {
           username: "",
           email: "",
           phone: "",
-          countryCode: "+254",
+          countryCode: "",
+          phoneCountryCode: "",
           password: "",
           referral: "",
           termsAccepted: false,
@@ -637,10 +779,7 @@ const SignUpForm = () => {
         navigate("/signin");
       }
     } catch (error) {
-      console.error(
-        "Payment callback error:",
-        error
-      );
+      console.error("Payment callback error:", error);
       setError(t(error.message || "payment_verification_failed"));
       setStep("payment");
     } finally {
@@ -775,176 +914,15 @@ const SignUpForm = () => {
                 name="countryCode"
                 value={formData.countryCode}
                 onChange={handleChange}
+                required
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 focus:ring-blue-900 focus:border-blue-900"
               >
-                <option value="+355">+355 (Albania)</option>
-                <option value="+213">+213 (Algeria)</option>
-                <option value="+376">+376 (Andorra)</option>
-                <option value="+244">+244 (Angola)</option>
-                <option value="+1-268">+1-268 (Antigua and Barbuda)</option>
-                <option value="+54">+54 (Argentina)</option>
-                <option value="+374">+374 (Armenia)</option>
-                <option value="+61">+61 (Australia)</option>
-                <option value="+43">+43 (Austria)</option>
-                <option value="+994">+994 (Azerbaijan)</option>
-                <option value="+1-242">+1-242 (Bahamas)</option>
-                <option value="+973">+973 (Bahrain)</option>
-                <option value="+880">+880 (Bangladesh)</option>
-                <option value="+1-246">+1-246 (Barbados)</option>
-                <option value="+375">+375 (Belarus)</option>
-                <option value="+32">+32 (Belgium)</option>
-                <option value="+501">+501 (Belize)</option>
-                <option value="+229">+229 (Benin)</option>
-                <option value="+975">+975 (Bhutan)</option>
-                <option value="+591">+591 (Bolivia)</option>
-                <option value="+387">+387 (Bosnia and Herzegovina)</option>
-                <option value="+267">+267 (Botswana)</option>
-                <option value="+55">+55 (Brazil)</option>
-                <option value="+673">+673 (Brunei)</option>
-                <option value="+359">+359 (Bulgaria)</option>
-                <option value="+226">+226 (Burkina Faso)</option>
-                <option value="+257">+257 (Burundi)</option>
-                <option value="+855">+855 (Cambodia)</option>
-                <option value="+237">+237 (Cameroon)</option>
-                <option value="+1">+1 (Canada)</option>
-                <option value="+238">+238 (Cape Verde)</option>
-                <option value="+56">+56 (Chile)</option>
-                <option value="+57">+57 (Colombia)</option>
-                <option value="+269">+269 (Comoros)</option>
-                <option value="+506">+506 (Costa Rica)</option>
-                <option value="+385">+385 (Croatia)</option>
-                <option value="+357">+357 (Cyprus)</option>
-                <option value="+420">+420 (Czech Republic)</option>
-                <option value="+243">
-                  +243 (Democratic Republic of the Congo)
-                </option>
-                <option value="+45">+45 (Denmark)</option>
-                <option value="+253">+253 (Djibouti)</option>
-                <option value="+1-767">+1-767 (Dominica)</option>
-                <option value="+1-809">+1-809 (Dominican Republic)</option>
-                <option value="+593">+593 (Ecuador)</option>
-                <option value="+20">+20 (Egypt)</option>
-                <option value="+503">+503 (El Salvador)</option>
-                <option value="+372">+372 (Estonia)</option>
-                <option value="+268">+268 (Eswatini)</option>
-                <option value="+251">+251 (Ethiopia)</option>
-                <option value="+679">+679 (Fiji)</option>
-                <option value="+358">+358 (Finland)</option>
-                <option value="+33">+33 (France)</option>
-                <option value="+241">+241 (Gabon)</option>
-                <option value="+220">+220 (Gambia)</option>
-                <option value="+995">+995 (Georgia)</option>
-                <option value="+49">+49 (Germany)</option>
-                <option value="+233">+233 (Ghana)</option>
-                <option value="+30">+30 (Greece)</option>
-                <option value="+1-473">+1-473 (Grenada)</option>
-                <option value="+502">+502 (Guatemala)</option>
-                <option value="+224">+224 (Guinea)</option>
-                <option value="+245">+245 (Guinea-Bissau)</option>
-                <option value="+592">+592 (Guyana)</option>
-                <option value="+504">+504 (Honduras)</option>
-                <option value="+852">+852 (Hong Kong)</option>
-                <option value="+36">+36 (Hungary)</option>
-                <option value="+354">+354 (Iceland)</option>
-                <option value="+91">+91 (India)</option>
-                <option value="+62">+62 (Indonesia)</option>
-                <option value="+353">+353 (Ireland)</option>
-                <option value="+972">+972 (Israel)</option>
-                <option value="+39">+39 (Italy)</option>
-                <option value="+1-876">+1-876 (Jamaica)</option>
-                <option value="+81">+81 (Japan)</option>
-                <option value="+962">+962 (Jordan)</option>
-                <option value="+7">+7 (Kazakhstan)</option>
-                <option value="+254">+254 (Kenya)</option>
-                <option value="+965">+965 (Kuwait)</option>
-                <option value="+996">+996 (Kyrgyzstan)</option>
-                <option value="+856">+856 (Laos)</option>
-                <option value="+371">+371 (Latvia)</option>
-                <option value="+961">+961 (Lebanon)</option>
-                <option value="+266">+266 (Lesotho)</option>
-                <option value="+231">+231 (Liberia)</option>
-                <option value="+423">+423 (Liechtenstein)</option>
-                <option value="+370">+370 (Lithuania)</option>
-                <option value="+352">+352 (Luxembourg)</option>
-                <option value="+261">+261 (Madagascar)</option>
-                <option value="+265">+265 (Malawi)</option>
-                <option value="+60">+60 (Malaysia)</option>
-                <option value="+960">+960 (Maldives)</option>
-                <option value="+223">+223 (Mali)</option>
-                <option value="+356">+356 (Malta)</option>
-                <option value="+222">+222 (Mauritania)</option>
-                <option value="+230">+230 (Mauritius)</option>
-                <option value="+52">+52 (Mexico)</option>
-                <option value="+373">+373 (Moldova)</option>
-                <option value="+377">+377 (Monaco)</option>
-                <option value="+976">+976 (Mongolia)</option>
-                <option value="+382">+382 (Montenegro)</option>
-                <option value="+212">+212 (Morocco)</option>
-                <option value="+258">+258 (Mozambique)</option>
-                <option value="+264">+264 (Namibia)</option>
-                <option value="+977">+977 (Nepal)</option>
-                <option value="+31">+31 (Netherlands)</option>
-                <option value="+64">+64 (New Zealand)</option>
-                <option value="+505">+505 (Nicaragua)</option>
-                <option value="+227">+227 (Niger)</option>
-                <option value="+234">+234 (Nigeria)</option>
-                <option value="+389">+389 (North Macedonia)</option>
-                <option value="+47">+47 (Norway)</option>
-                <option value="+968">+968 (Oman)</option>
-                <option value="+92">+92 (Pakistan)</option>
-                <option value="+507">+507 (Panama)</option>
-                <option value="+675">+675 (Papua New Guinea)</option>
-                <option value="+595">+595 (Paraguay)</option>
-                <option value="+51">+51 (Peru)</option>
-                <option value="+63">+63 (Philippines)</option>
-                <option value="+48">+48 (Poland)</option>
-                <option value="+351">+351 (Portugal)</option>
-                <option value="+974">+974 (Qatar)</option>
-                <option value="+40">+40 (Romania)</option>
-                <option value="+7">+7 (Russia)</option>
-                <option value="+250">+250 (Rwanda)</option>
-                <option value="+1-869">+1-869 (Saint Kitts and Nevis)</option>
-                <option value="+1-758">+1-758 (Saint Lucia)</option>
-                <option value="+1-784">
-                  +1-784 (Saint Vincent and the Grenadines)
-                </option>
-                <option value="+685">+685 (Samoa)</option>
-                <option value="+378">+378 (San Marino)</option>
-                <option value="+239">+239 (Sao Tome and Principe)</option>
-                <option value="+966">+966 (Saudi Arabia)</option>
-                <option value="+221">+221 (Senegal)</option>
-                <option value="+381">+381 (Serbia)</option>
-                <option value="+248">+248 (Seychelles)</option>
-                <option value="+232">+232 (Sierra Leone)</option>
-                <option value="+65">+65 (Singapore)</option>
-                <option value="+421">+421 (Slovakia)</option>
-                <option value="+386">+386 (Slovenia)</option>
-                <option value="+27">+27 (South Africa)</option>
-                <option value="+82">+82 (South Korea)</option>
-                <option value="+34">+34 (Spain)</option>
-                <option value="+94">+94 (Sri Lanka)</option>
-                <option value="+597">+597 (Suriname)</option>
-                <option value="+46">+46 (Sweden)</option>
-                <option value="+41">+41 (Switzerland)</option>
-                <option value="+886">+886 (Taiwan)</option>
-                <option value="+992">+992 (Tajikistan)</option>
-                <option value="+255">+255 (Tanzania)</option>
-                <option value="+66">+66 (Thailand)</option>
-                <option value="+228">+228 (Togo)</option>
-                <option value="+1-868">+1-868 (Trinidad and Tobago)</option>
-                <option value="+216">+216 (Tunisia)</option>
-                <option value="+90">+90 (Turkey)</option>
-                <option value="+256">+256 (Uganda)</option>
-                <option value="+380">+380 (Ukraine)</option>
-                <option value="+971">+971 (United Arab Emirates)</option>
-                <option value="+44">+44 (United Kingdom)</option>
-                <option value="+1">+1 (United States)</option>
-                <option value="+598">+598 (Uruguay)</option>
-                <option value="+998">+998 (Uzbekistan)</option>
-                <option value="+678">+678 (Vanuatu)</option>
-                <option value="+84">+84 (Vietnam)</option>
-                <option value="+260">+260 (Zambia)</option>
-                <option value="+263">+263 (Zimbabwe)</option>
+                <option value="">{t("Select Country")}</option>
+                {countryOptions.map((country) => (
+                  <option key={country.isoCode} value={country.isoCode}>
+                    {country.label}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
@@ -954,19 +932,29 @@ const SignUpForm = () => {
               >
                 {t("Phone Number")}
               </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                required
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="e.g +44 792-345-8678"
-                pattern="[0-9]{9,15}"
-                minLength={9}
-                maxLength={15}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 focus:ring-blue-900 focus:border-blue-900"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  id="phoneCountryCode"
+                  name="phoneCountryCode"
+                  value={formData.phoneCountryCode}
+                  readOnly
+                  className="mt-1 w-1/4 rounded-md border-gray-300 shadow-sm p-2 bg-gray-100"
+                />
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  required
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder={t("e.g 7923458678")}
+                  pattern="[0-9]{9,15}"
+                  minLength={9}
+                  maxLength={15}
+                  className="mt-1 block w-3/4 rounded-md border-gray-300 shadow-sm p-2 focus:ring-blue-900 focus:border-blue-900"
+                />
+              </div>
             </div>
             <div>
               <label
@@ -982,7 +970,7 @@ const SignUpForm = () => {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                placeholder={t(" ")}
+                placeholder={t("")}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 focus:ring-blue-900 focus:border-blue-900"
               />
             </div>
@@ -1039,9 +1027,7 @@ const SignUpForm = () => {
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full bg-blue-900 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-800 transition-colors duration-200 ${
-                  isSubmitting
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer"
+                  isSubmitting ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
                 }`}
               >
                 {isSubmitting ? t("submitting") : t("Sign Up")}
@@ -1068,7 +1054,7 @@ const SignUpForm = () => {
         {step === "phoneOTP" && (
           <OTPVerification
             type="phone"
-            identifier={`${formData.countryCode}${formData.phone}`}
+            identifier={`${formData.phoneCountryCode}${formData.phone}`}
             onSuccess={handlePhoneOTP}
             onBack={handleBack}
             formData={formData}
@@ -1119,7 +1105,6 @@ const SignUpForm = () => {
               </div>
             )}
 
-            {/* Fix: Add warning for adblockers blocking Stripe */}
             {["stripe", "mastercard", "googlepay"].includes(paymentMethod) && (
               <div className="text-yellow-600 p-2 bg-yellow-100 rounded">
                 {t("disable_adblocker_for_stripe")}
@@ -1169,7 +1154,7 @@ const SignUpForm = () => {
                   type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value.trim())}
-                  placeholder="+254791800900"
+                  placeholder={`${formData.phoneCountryCode}${formData.phone}`}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 focus:ring-blue-900 focus:border-blue-900"
                   pattern="^\+\d{10,14}$"
                   required

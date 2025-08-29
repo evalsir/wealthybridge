@@ -3,7 +3,6 @@ const Payment = require('../models/Payment');
 const paymentService = require('../services/paymentService');
 const ErrorHandler = require('../utils/errorHandler');
 const logger = require('../utils/logger');
-const { calculateReferralBonus } = require('./userController');
 
 const processPayment = async (req, res, next) => {
   try {
@@ -37,8 +36,8 @@ const processPayment = async (req, res, next) => {
     payment.status = 'success';
     await payment.save();
 
-    // Trigger referral bonus calculation
-    await calculateReferralBonus(payment._id);
+    // Modified: Use paymentService for referral bonus
+    await paymentService.handleReferralBonus(payment._id);
 
     res.json({ success: true, paymentId: payment._id, ...result });
   } catch (err) {
@@ -60,7 +59,8 @@ const capturePayment = async (req, res, next) => {
     await payment.save();
 
     if (result.success) {
-      await calculateReferralBonus(payment._id);
+      // Modified: Use paymentService for referral bonus
+      await paymentService.handleReferralBonus(payment._id);
     }
 
     res.json({ message: 'Payment captured', ...result });

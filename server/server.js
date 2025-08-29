@@ -1,4 +1,11 @@
 // server.js
+// server.js
+delete require.cache[require.resolve('./src/routes/authRoutes.js')];
+delete require.cache[require.resolve('./src/controllers/authController.js')];
+delete require.cache[require.resolve('./src/middlewares/authMiddleware.js')];
+delete require.cache[require.resolve('./src/middlewares/validationMiddleware.js')];
+
+
 require('dotenv').config();
 const app = require('./src/index');
 const { connectDB } = require('./src/config/db');

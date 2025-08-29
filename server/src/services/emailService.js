@@ -1,48 +1,91 @@
-// src/services/emailService.js
 const nodemailer = require('nodemailer');
 const logger = require('../utils/logger');
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+let transporter;
 
-exports.sendPaymentNotification = async (email, status, amount, currency, transactionId) => {
-  const subject = `Payment ${status} - WealthyBridge`;
-  const text = `Your payment of ${amount} ${currency} (ID: ${transactionId}) is ${status}.`;
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
-    to: email,
+// ✅ Initialize transporter based on environment
+(async () => {
+  if (process.env.NODE_ENV === 'development') {
+    // Use Ethereal for testing
+    const testAccount = await nodemailer.createTestAccount();
+    transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+    logger.info(`Ethereal test account created: ${testAccount.user}`);
+  } else {
+    // Use real SMTP for production (SendGrid, Gmail, etc.)
+    transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+  }
+})();
+
+// ✅ Generic email sender
+async function sendEmail(to, subject, text) {
+  if (!transporter) {
+    throw new Error('Email transporter not initialized');
+  }
+
+  const info = await transporter.sendMail({
+    from: process.env.EMAIL_FROM || '"WealthyBridge" <noreply@wealthybridge.com>',
+    to,
     subject,
     text,
   });
-  logger.info(`Payment notification sent to ${email}: ${status}`);
+
+  if (process.env.NODE_ENV === 'development') {
+    logger.info(`Ethereal Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+  }
+}
+
+// ✅ Send OTP Email
+exports.sendOTP = async (email, otp) => {
+  await sendEmail(
+    email,
+    'Your OTP Code - WealthyBridge',
+    `Your OTP code is: ${otp}. It will expire in 10 minutes.`
+  );
+  logger.info(`OTP email sent to ${email}`);
 };
 
-exports.sendReferralNotification = async (referredEmail, referrerEmail) => {
-  const subject = 'You Have Been Referred to WealthyBridge';
-  const text = `You were referred by ${referrerEmail}. Sign up and invest to earn rewards!`;
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
-    to: referredEmail,
-    subject,
-    text,
-  });
-  logger.info(`Referral notification sent to ${referredEmail}`);
+// ✅ Send Payment Confirmation Email
+exports.sendPaymentConfirmation = async (email, amount, transactionId) => {
+  await sendEmail(
+    email,
+    'Payment Confirmation - WealthyBridge',
+    `Your payment of $${amount} was successful. Transaction ID: ${transactionId}.`
+  );
+  logger.info(`Payment confirmation email sent to ${email}`);
 };
 
-exports.sendBonusNotification = async (email, bonusAmount, currency) => {
-  const subject = 'Referral Bonus Received - WealthyBridge';
-  const text = `You earned a referral bonus of ${bonusAmount} ${currency}!`;
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
-    to: email,
-    subject,
-    text,
-  });
-  logger.info(`Bonus notification sent to ${email}`);
+// ✅ Send Referral Bonus Email
+exports.sendReferralBonus = async (email, bonusAmount) => {
+  await sendEmail(
+    email,
+    'Referral Bonus - WealthyBridge',
+    `Congratulations! You received a referral bonus of $${bonusAmount}. Keep referring!`
+  );
+  logger.info(`Referral bonus email sent to ${email}`);
+};
+
+// ✅ Send Account Bonus Email
+exports.sendAccountBonus = async (email, bonusAmount) => {
+  await sendEmail(
+    email,
+    'Account Bonus - WealthyBridge',
+    `You have been credited with a bonus of $${bonusAmount}. Thank you for being with us!`
+  );
+  logger.info(`Account bonus email sent to ${email}`);
 };

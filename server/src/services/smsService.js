@@ -33,3 +33,12 @@ exports.sendBonusNotification = async (phone, bonusAmount, currency) => {
   });
   logger.info(`Bonus SMS sent to ${phone}`);
 };
+exports.sendOTP = async (phone, otpCode) => {
+  const message = `Your OTP code is ${otpCode}. It is valid for 10 minutes.`;
+  await client.messages.create({
+    body: message,
+    from: process.env.SMS_FROM,
+    to: phone,
+  });
+  logger.info(`OTP SMS sent to ${phone}: ${otpCode}`);
+};

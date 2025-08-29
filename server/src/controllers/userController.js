@@ -1,9 +1,8 @@
 // /home/gnais/AW/server/src/controllers/userController.js
 const dotenv = require('dotenv');
-require('dotenv').config(); //  Make sure .env variables are loaded
+require('dotenv').config(); // Make sure .env variables are loaded
 const User = require('../models/User');
 const Referral = require('../models/Referral');
-
 const Payment = require('../models/Payment');
 const Investment = require('../models/Investment');
 const SupportTicket = require('../models/SupportTicket');
@@ -13,7 +12,6 @@ const { paypalUnsupportedCountryCodes } = require('../utils/constants');
 const Stripe = require('stripe');
 const PayPal = require('@paypal/checkout-server-sdk');
 const { v4: uuidv4 } = require('uuid');
-
 const emailService = require('../services/emailService');
 const smsService = require('../services/smsService');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -70,34 +68,8 @@ exports.getReferrals = async (req, res, next) => {
   }
 };
 
-exports.calculateReferralBonus = async (paymentId) => {
-  try {
-    const payment = await Payment.findById(paymentId).populate('user');
-    if (!payment || payment.status !== 'success') return;
+// Removed: calculateReferralBonus moved to paymentService.handleReferralBonus
 
-    const referral = await Referral.findOne({ referred: payment.user._id, status: 'pending' });
-    if (!referral) return;
-
-    const bonusPercent = parseFloat(process.env.REFERRAL_BONUS_PERCENT) || 4;
-    const bonusAmount = (payment.amount * bonusPercent) / 100;
-
-    referral.bonusAmount = bonusAmount;
-    referral.status = 'completed';
-    await referral.save();
-
-    const referrer = await User.findById(referral.referrer);
-    if (referrer) {
-      await emailService.sendBonusNotification(referrer.email, bonusAmount, payment.currency);
-      await smsService.sendBonusNotification(`+${referrer.countryCode}${referrer.phone}`, bonusAmount, payment.currency);
-      logger.info(`Referral bonus applied: ${bonusAmount} ${payment.currency} for referrer ${referral.referrer}`);
-    }
-  } catch (err) {
-    logger.error(`Referral bonus calculation error: ${err.message}`);
-  }
-};
-
-
-// Get User Stats for Overview.jsx
 exports.getUserStats = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.userId);
@@ -123,7 +95,6 @@ exports.getUserStats = async (req, res, next) => {
   }
 };
 
-// Get User Activity for Overview.jsx
 exports.getUserActivity = async (req, res, next) => {
   try {
     const { type } = req.query;
@@ -163,7 +134,6 @@ exports.getUserActivity = async (req, res, next) => {
   }
 };
 
-// Get Investments for Earnings.jsx, History.jsx, ManageInvestments.jsx
 exports.getInvestments = async (req, res, next) => {
   try {
     const { plan, start, end } = req.query;
@@ -200,7 +170,6 @@ exports.getInvestments = async (req, res, next) => {
   }
 };
 
-// Create Investment for BuyShares.jsx
 exports.createInvestment = async (req, res, next) => {
   const {
     plan,
@@ -263,7 +232,6 @@ exports.createInvestment = async (req, res, next) => {
         paymentMethod,
       });
     } else if (['paypal', 'skrill', 'flutterwave'].includes(paymentMethod)) {
-      // Placeholder for redirect-based payment initiation
       const request = new PayPal.orders.OrdersCreateRequest();
       request.requestBody({
         intent: 'CAPTURE',
@@ -333,7 +301,6 @@ exports.createInvestment = async (req, res, next) => {
   }
 };
 
-// Cancel Investment for ManageInvestments.jsx
 exports.cancelInvestment = async (req, res, next) => {
   const { id } = req.params;
 
@@ -362,7 +329,6 @@ exports.cancelInvestment = async (req, res, next) => {
   }
 };
 
-// Get Profile for Profile.jsx
 exports.getProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.userId).select(
@@ -389,7 +355,6 @@ exports.getProfile = async (req, res, next) => {
   }
 };
 
-// Update Profile for Profile.jsx
 exports.updateProfile = async (req, res, next) => {
   const { name, email, phone, countryCode, preferredPaymentMethod, address } = req.body;
 
@@ -408,7 +373,7 @@ exports.updateProfile = async (req, res, next) => {
 
     if (phone && phone !== user.phone) {
       const existingPhone = await User.findOne({ phone });
-      if (existingPhone) return next(new ErrorHandler(400, 'Phone number already exists'));
+      if (existingPhone) return new ErrorHandler(400, 'Phone number already exists');
     }
 
     const [firstName, ...lastNameParts] = name.trim().split(' ');
@@ -430,7 +395,6 @@ exports.updateProfile = async (req, res, next) => {
   }
 };
 
-// Create Support Ticket for Support.jsx
 exports.createSupportTicket = async (req, res, next) => {
   const { name, email, category, subject, message } = req.body;
 
@@ -446,8 +410,7 @@ exports.createSupportTicket = async (req, res, next) => {
 
     await ticket.save();
 
-    // Notify admin via email
-    await sendEmail({
+    await emailService.sendEmail({
       to: process.env.EMAIL_FROM,
       subject: `New Support Ticket: ${subject}`,
       text: `New support ticket from ${name} (${email}):\nCategory: ${category}\nMessage: ${message}`,
@@ -461,7 +424,6 @@ exports.createSupportTicket = async (req, res, next) => {
   }
 };
 
-// Request Withdrawal for Withdraw.jsx
 exports.requestWithdrawal = async (req, res, next) => {
   const { amount, method, details } = req.body;
 
@@ -489,12 +451,12 @@ exports.requestWithdrawal = async (req, res, next) => {
     await payment.save();
 
     if (method === 'mpesa') {
-      await sendSMS({
+      await smsService.sendSMS({
         to: user.phone,
         message: `Your withdrawal OTP is ${otp}. Do not share this code.`,
       });
     } else {
-      await sendEmail({
+      await emailService.sendEmail({
         to: user.email,
         subject: 'Withdrawal OTP Verification',
         text: `Your withdrawal OTP is ${otp}. Do not share this code.`,
@@ -509,7 +471,6 @@ exports.requestWithdrawal = async (req, res, next) => {
   }
 };
 
-// Verify Withdrawal OTP for Withdraw.jsx
 exports.verifyWithdrawalOTP = async (req, res, next) => {
   const { amount, method, details, otp } = req.body;
 

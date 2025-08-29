@@ -1,3 +1,5 @@
+
+//src/components/Auth/OTPVerification.jsx
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ResendEmailOTP, ResendPhoneOTP, resend2FAOTP } from "../../utils/api";
